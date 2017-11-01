@@ -20,10 +20,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        TodoCalendarApplication.graph.inject(this);
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel::class.java)
+        todoViewModel?.init();
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
