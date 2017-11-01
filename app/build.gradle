@@ -52,4 +52,9 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.11'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     /* end Dagger */
+
+    /* Room */
+    compile "android.arch.persistence.room:runtime:1.0.0-rc1"
+    kapt "android.arch.persistence.room:compiler:1.0.0-rc1"
+    /* end Room*/
 }

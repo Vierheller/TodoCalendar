@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.repository.TodoRepository
-import de.vierheller.todocalendar.model.TodoEntity
+import de.vierheller.todocalendar.model.todo.TodoEntity
 import javax.inject.Inject
 
 /**
