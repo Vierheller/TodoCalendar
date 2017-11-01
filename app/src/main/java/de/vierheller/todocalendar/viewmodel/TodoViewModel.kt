@@ -1,10 +1,11 @@
-package de.vierheller.todocalendar
+package de.vierheller.todocalendar.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
-import de.vierheller.todocalendar.dependency_injection.ApplicationComponent
+import de.vierheller.todocalendar.TodoCalendarApplication
+import de.vierheller.todocalendar.repository.TodoRepository
+import de.vierheller.todocalendar.model.TodoEntity
 import javax.inject.Inject
 
 /**
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 class TodoViewModel : ViewModel(){
     @Inject
-    lateinit var todoRepo :TodoRepository
+    lateinit var todoRepo : TodoRepository
 
     var todos : LiveData<List<TodoEntity>> = MutableLiveData()
 

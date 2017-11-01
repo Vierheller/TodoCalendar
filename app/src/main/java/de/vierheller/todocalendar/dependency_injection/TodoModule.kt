@@ -1,9 +1,8 @@
 package de.vierheller.todocalendar.dependency_injection
 
-import android.app.Application
 import dagger.Module
 import dagger.Provides
-import de.vierheller.todocalendar.TodoRepository
+import de.vierheller.todocalendar.repository.TodoRepository
 import javax.inject.Singleton
 
 /**
@@ -14,7 +13,7 @@ class TodoModule() {
 
     @Provides
     @Singleton
-    public fun providesTodoRepository():TodoRepository{
+    public fun providesTodoRepository(): TodoRepository {
         return TodoRepository();
     }
 }

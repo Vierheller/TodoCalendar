@@ -1,9 +1,9 @@
 package de.vierheller.todocalendar.dependency_injection
 
 import dagger.Component
-import de.vierheller.todocalendar.MainActivity
+import de.vierheller.todocalendar.view.MainActivity
 import de.vierheller.todocalendar.TodoCalendarApplication
-import de.vierheller.todocalendar.TodoViewModel
+import de.vierheller.todocalendar.viewmodel.TodoViewModel
 import javax.inject.Singleton
 
 /**

@@ -1,10 +1,8 @@
 package de.vierheller.todocalendar.dependency_injection
 
 import android.app.Application
-import android.content.Context
 import dagger.Module
 import dagger.Provides
-import de.vierheller.todocalendar.TodoRepository
 import javax.inject.Singleton
 
 /**

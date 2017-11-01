@@ -1,8 +1,8 @@
-package de.vierheller.todocalendar
+package de.vierheller.todocalendar.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
+import de.vierheller.todocalendar.model.TodoEntity
 
 /**
  * Created by Vierheller on 01.11.2017.
