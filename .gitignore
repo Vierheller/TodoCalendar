@@ -28,4 +28,4 @@ gen
 *.rar
 /app/build/
 /.idea/
-/gradle/
+
