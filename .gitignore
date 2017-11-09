@@ -28,6 +28,4 @@ gen
 *.rar
 /app/build/
 /.idea/
-/gradlew
-/gradlew.bat
 /gradle/
