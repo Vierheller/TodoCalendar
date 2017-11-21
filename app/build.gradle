@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+ext.anko_version='0.10.2'
+
 kapt {
     generateStubs = true
 }
@@ -43,8 +45,8 @@ dependencies {
 
     /** component arch */
     implementation "android.arch.lifecycle:runtime:1.0.3"
-    implementation "android.arch.lifecycle:extensions:1.0.0-rc1"
-    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-rc1"
+    implementation "android.arch.lifecycle:extensions:1.0.0"
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0"
     /** end of arch */
 
     /* Dagger */
@@ -54,7 +56,10 @@ dependencies {
     /* end Dagger */
 
     /* Room */
-    compile "android.arch.persistence.room:runtime:1.0.0-rc1"
-    kapt "android.arch.persistence.room:compiler:1.0.0-rc1"
+    compile "android.arch.persistence.room:runtime:1.0.0"
+    kapt "android.arch.persistence.room:compiler:1.0.0"
     /* end Room*/
+
+    /* Kotlin Libs */
+    compile "org.jetbrains.anko:anko:$anko_version"
 }

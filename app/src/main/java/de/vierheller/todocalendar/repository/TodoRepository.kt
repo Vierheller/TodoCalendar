@@ -3,6 +3,7 @@ package de.vierheller.todocalendar.repository
 import android.arch.lifecycle.LiveData
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
+import org.jetbrains.anko.doAsync
 
 /**
  * Created by Vierheller on 01.11.2017.
@@ -14,7 +15,9 @@ class TodoRepository(){
     }
 
     fun putTodo(entity: Task) {
-        TodoCalendarApplication.database.TodoDao().insert(entity)
+        doAsync {
+            TodoCalendarApplication.database.TodoDao().insert(entity)
+        }
     }
 
 
