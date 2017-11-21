@@ -1,14 +1,19 @@
 package de.vierheller.todocalendar.view
 
 import android.content.Context
+import android.graphics.RectF
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.alamkanak.weekview.WeekViewEvent
 
 import de.vierheller.todocalendar.R
+import kotlinx.android.synthetic.main.fragment_day_view.*
+
 
 /**
  * A simple [Fragment] subclass.
@@ -40,6 +45,21 @@ class DayViewFragment : Fragment() {
         return inflater!!.inflate(R.layout.fragment_day_view, container, false)
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        weekView.setOnEventClickListener() { event: WeekViewEvent?, eventRect: RectF? ->
+            Log.d("Tag", "Clicked!");
+        }
+
+        weekView.setMonthChangeListener { newYear, newMonth ->
+            MutableList(0, {i-> WeekViewEvent()})
+        }
+
+        weekView.setEventLongPressListener { event, eventRect ->
+            Log.d("Tag", "Long Clicked!")
+        }
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         if (mListener != null) {
@@ -52,7 +72,7 @@ class DayViewFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             mListener = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
+//            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
         }
     }
 
