@@ -10,9 +10,9 @@ import android.arch.persistence.room.Query
  */
 @Dao
 interface TodoDao {
-    @Query("SELECT * FROM todos")
-    fun getAllTodos(): LiveData<List<TodoEntity>>
+    @Query("SELECT * FROM tasks")
+    fun getAllTodos(): LiveData<List<Task>>
 
     @Insert
-    fun insert(todoEntity: TodoEntity)
+    fun insert(todoEntity: Task)
 }

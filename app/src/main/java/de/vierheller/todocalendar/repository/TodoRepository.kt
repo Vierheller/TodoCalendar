@@ -1,17 +1,21 @@
 package de.vierheller.todocalendar.repository
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import de.vierheller.todocalendar.model.todo.TodoEntity
+import de.vierheller.todocalendar.TodoCalendarApplication
+import de.vierheller.todocalendar.model.todo.Task
 
 /**
  * Created by Vierheller on 01.11.2017.
  */
 
 class TodoRepository(){
-    public fun getAllTodos():LiveData<List<TodoEntity>>{
-        val data = MutableLiveData<List<TodoEntity>>();
-        data.value = listOf(TodoEntity(name="Test", duration_min = 5, buffer_time = 5, priority = 1))
-        return data;
+    public fun getAllTodos():LiveData<List<Task>>{
+        return TodoCalendarApplication.database.TodoDao().getAllTodos();
     }
+
+    fun putTodo(entity: Task) {
+        TodoCalendarApplication.database.TodoDao().insert(entity)
+    }
+
+
 }

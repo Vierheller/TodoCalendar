@@ -6,8 +6,8 @@ import android.arch.persistence.room.PrimaryKey
 /**
  * Created by Vierheller on 01.11.2017.
  */
-@Entity(tableName = "todos")
-data class TodoEntity(
+@Entity(tableName = "tasks")
+data class Task(
     @PrimaryKey(autoGenerate = true)
     val uid: Long = 0,
     val parent_todo_id: Long = 0,
