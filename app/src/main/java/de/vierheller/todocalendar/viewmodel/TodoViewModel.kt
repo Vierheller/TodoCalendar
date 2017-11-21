@@ -16,16 +16,25 @@ class TodoViewModel : ViewModel(){
     @Inject
     lateinit var todoRepo : TodoRepository
 
-    var todos : LiveData<List<Task>> = MutableLiveData()
+    private var tasks: LiveData<List<Task>>? = null
+
+    init {
+        TodoCalendarApplication.graph.inject(this)
+    }
 
     public fun addTodo(entity: Task){
         todoRepo.putTodo(entity)
     }
 
+    fun getTasks():LiveData<List<Task>>{
+        if(tasks==null){
+            tasks = MutableLiveData<List<Task>>()
+            loadTasks()
+        }
+        return tasks!!
+    }
 
-    fun init(){
-        TodoCalendarApplication.graph.inject(this);
-
-        todos = todoRepo.getAllTodos()
+    private fun loadTasks() {
+        tasks = todoRepo.getTodos();
     }
 }

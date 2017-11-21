@@ -16,4 +16,10 @@ data class Task(
     val buffer_time: Int,
     val priority: Int,
     val note:String = ""
-)
+
+
+) {
+    override fun toString(): String {
+        return "Task(uid=$uid, parent_todo_id=$parent_todo_id, name='$name', duration_min=$duration_min, buffer_time=$buffer_time, priority=$priority, note='$note')"
+    }
+}

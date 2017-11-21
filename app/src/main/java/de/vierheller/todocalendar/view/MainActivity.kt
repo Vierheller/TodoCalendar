@@ -1,5 +1,6 @@
 package de.vierheller.todocalendar.view
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -28,10 +29,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel::class.java)
-        todoViewModel?.init();
 
         todoViewModel?.addTodo(Task(name = "Test", duration_min = 0, buffer_time = 0, priority = 0))
-        Log.d("TAG:", todoViewModel?.todos.toString());
+        todoViewModel?.getTasks()?.observe(this, Observer {
+            Log.d("TAG", "Data is null")
+            if(it!=null){
+                Log.d("TAG", "Length = "+it.size)
+                if(it.size>0)
+                    Log.d("TAG", it.get(0).toString())
+            }
+        })
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

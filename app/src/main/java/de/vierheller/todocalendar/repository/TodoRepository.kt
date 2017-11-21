@@ -9,7 +9,7 @@ import de.vierheller.todocalendar.model.todo.Task
  */
 
 class TodoRepository(){
-    public fun getAllTodos():LiveData<List<Task>>{
+    public fun getTodos():LiveData<List<Task>>{
         return TodoCalendarApplication.database.TodoDao().getAllTodos();
     }
 
