@@ -2,6 +2,7 @@ package de.vierheller.todocalendar.model.todo
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import java.util.*
 
 /**
  * Created by Vierheller on 01.11.2017.
@@ -12,6 +13,7 @@ data class Task(
     val uid: Long = 0,
     val parent_todo_id: Long = 0,
     val name: String,
+    val startDate: Calendar,
     val duration_min: Int,
     val buffer_time: Int,
     val priority: Int,
@@ -21,5 +23,15 @@ data class Task(
 ) {
     override fun toString(): String {
         return "Task(uid=$uid, parent_todo_id=$parent_todo_id, name='$name', duration_min=$duration_min, buffer_time=$buffer_time, priority=$priority, note='$note')"
+    }
+
+    fun getStartingDate():Calendar {
+        return startDate;
+    }
+
+    fun getEndDate():Calendar{
+        var endDate = startDate.clone() as Calendar;
+        endDate.add(Calendar.MINUTE, duration_min + buffer_time);
+        return endDate;
     }
 }

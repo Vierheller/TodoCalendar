@@ -12,7 +12,10 @@ import android.arch.persistence.room.Query
 @Dao
 interface TodoDao {
     @Query("SELECT * FROM tasks")
-    fun getAllTodos(): LiveData<List<Task>>
+    fun getAllTodosLive(): LiveData<List<Task>>
+
+    @Query("SELECT * FROM tasks")
+    fun getAllTodos():List<Task>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(todoEntity: Task)

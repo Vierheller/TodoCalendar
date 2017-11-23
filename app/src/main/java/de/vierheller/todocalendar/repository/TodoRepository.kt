@@ -10,14 +10,18 @@ import org.jetbrains.anko.doAsync
  */
 
 class TodoRepository(){
-    public fun getTodos():LiveData<List<Task>>{
-        return TodoCalendarApplication.database.TodoDao().getAllTodos();
+    public fun getTodosLive():LiveData<List<Task>>{
+        return TodoCalendarApplication.database.TodoDao().getAllTodosLive();
     }
 
     fun putTodo(entity: Task) {
         doAsync {
             TodoCalendarApplication.database.TodoDao().insert(entity)
         }
+    }
+
+    fun getTodos():List<Task>{
+        return TodoCalendarApplication.database.TodoDao().getAllTodos();
     }
 
 

@@ -3,6 +3,7 @@ package de.vierheller.todocalendar.viewmodel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.alamkanak.weekview.WeekViewEvent
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.repository.TodoRepository
@@ -34,7 +35,16 @@ class TodoViewModel : ViewModel(){
         return tasks!!
     }
 
+    fun getTasksAsWeekViewEvent():MutableList<WeekViewEvent>{
+        val todos = todoRepo.getTodos();
+
+        return MutableList<WeekViewEvent>(todos.size){index ->
+            val todo = todos.get(index)
+            WeekViewEvent(todo.uid, todo.name, todo.getStartingDate(), todo.getEndDate());
+        };
+    }
+
     private fun loadTasks() {
-        tasks = todoRepo.getTodos();
+        tasks = todoRepo.getTodosLive();
     }
 }
