@@ -24,9 +24,11 @@ import kotlinx.android.synthetic.main.fragment_day_view.*
  */
 class DayViewFragment : Fragment() {
     private var mListener: OnDayViewFragmentInteractionListener? = null
+    private lateinit var mainActivity:MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mainActivity = activity as MainActivity
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -44,12 +46,18 @@ class DayViewFragment : Fragment() {
         }
 
         weekView.setMonthChangeListener { newYear, newMonth ->
-            (activity as MainActivity).todoViewModel?.getTasksAsWeekViewEvent()
+            mainActivity.todoViewModel?.getTasksAsWeekViewEvent()
         }
 
         weekView.setEventLongPressListener { event, eventRect ->
             Log.d("Tag", "Long Clicked!")
         }
+
+        mainActivity.todoViewModel!!.setOnTasksUpdatedListener =
+                object : OnDayViewFragmentInteractionListener{
+                    override fun onTaskClicked(task: Task) {
+                    }
+                }
     }
 
     override fun onAttach(context: Context?) {

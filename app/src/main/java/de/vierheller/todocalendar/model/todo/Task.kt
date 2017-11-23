@@ -15,7 +15,7 @@ data class Task(
     val name: String,
     val startDate: Calendar,
     val duration_min: Int,
-    val buffer_time: Int,
+    val buffer_time: Int = 0,
     val priority: Int,
     val note:String = ""
 

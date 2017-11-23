@@ -18,6 +18,7 @@ import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.viewmodel.TodoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
+import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DayViewFragment.OnDayViewFragmentInteractionListener {
     var todoViewModel : TodoViewModel? = null;
@@ -30,13 +31,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel::class.java)
 
-        todoViewModel?.addTodo(Task(name = "Test", duration_min = 0, buffer_time = 0, priority = 0))
+        todoViewModel?.addTodo(Task(name = "Test", startDate = Calendar.getInstance(), duration_min = 30, buffer_time = 0, priority = 0))
         todoViewModel?.getTasks()?.observe(this, Observer {
             Log.d("TAG", "Data is null")
-            if(it!=null){
-                Log.d("TAG", "Length = "+it.size)
-                if(it.size>0)
+            if(it!=null) {
+                Log.d("TAG", "Length = " + it.size)
+                if (it.size > 0)
                     Log.d("TAG", it.get(0).toString())
+
             }
         })
 

@@ -18,9 +18,18 @@ class TodoViewModel : ViewModel(){
     lateinit var todoRepo : TodoRepository
 
     private var tasks: LiveData<List<Task>>? = null
+    private var onTasksUpdatedObservers:MutableList<OnTasksUpdatedListener> = ArrayList()
 
     init {
         TodoCalendarApplication.graph.inject(this)
+    }
+
+    fun setOnTasksUpdatedListener(listener:OnTasksUpdatedListener){
+        onTasksUpdatedObservers.add(listener)
+    }
+
+    fun removeOnTasksUpdatedListener(listener:OnTasksUpdatedListener){
+        onTasksUpdatedObservers.remove(listener)
     }
 
     public fun addTodo(entity: Task){
@@ -46,5 +55,9 @@ class TodoViewModel : ViewModel(){
 
     private fun loadTasks() {
         tasks = todoRepo.getTodosLive();
+    }
+
+    public interface OnTasksUpdatedListener{
+        fun onWeekViewTasksUpdated();
     }
 }
