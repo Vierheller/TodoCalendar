@@ -53,11 +53,11 @@ class DayViewFragment : Fragment() {
             Log.d("Tag", "Long Clicked!")
         }
 
-        mainActivity.todoViewModel!!.setOnTasksUpdatedListener =
-                object : OnDayViewFragmentInteractionListener{
-                    override fun onTaskClicked(task: Task) {
-                    }
-                }
+//        mainActivity.todoViewModel!!.setOnTasksUpdatedListener =
+//                object : OnDayViewFragmentInteractionListener{
+//                    override fun onTaskClicked(task: Task) {
+//                    }
+//                }
     }
 
     override fun onAttach(context: Context?) {

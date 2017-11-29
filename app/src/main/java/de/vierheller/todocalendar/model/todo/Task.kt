@@ -13,7 +13,7 @@ data class Task(
     val uid: Long = 0,
     val parent_todo_id: Long = 0,
     val name: String,
-    val startDate: Calendar,
+    val startDate: Long,
     val duration_min: Int,
     val buffer_time: Int = 0,
     val priority: Int,
@@ -26,11 +26,14 @@ data class Task(
     }
 
     fun getStartingDate():Calendar {
-        return startDate;
+        var cal: Calendar = Calendar.getInstance();
+        cal.timeInMillis = startDate
+        return cal;
     }
 
     fun getEndDate():Calendar{
-        var endDate = startDate.clone() as Calendar;
+        var endDate:Calendar = Calendar.getInstance();
+        endDate.timeInMillis = startDate
         endDate.add(Calendar.MINUTE, duration_min + buffer_time);
         return endDate;
     }

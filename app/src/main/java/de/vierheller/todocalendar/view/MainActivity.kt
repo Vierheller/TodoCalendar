@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel::class.java)
 
-        todoViewModel?.addTodo(Task(name = "Test", startDate = Calendar.getInstance(), duration_min = 30, buffer_time = 0, priority = 0))
+        todoViewModel?.addTodo(Task(name = "Test", startDate = Calendar.getInstance().timeInMillis, duration_min = 30, buffer_time = 0, priority = 0))
         todoViewModel?.getTasks()?.observe(this, Observer {
             Log.d("TAG", "Data is null")
             if(it!=null) {
