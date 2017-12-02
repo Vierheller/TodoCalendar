@@ -63,6 +63,4 @@ dependencies {
     /* Kotlin Libs */
     compile "org.jetbrains.anko:anko:$anko_version"
 
-    //DayView
-    compile 'com.github.alamkanak:android-week-view:1.2.6'
 }

@@ -1,17 +1,14 @@
 package de.vierheller.todocalendar.view
 
+import android.arch.lifecycle.Observer
 import android.content.Context
-import android.graphics.RectF
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.alamkanak.weekview.WeekViewEvent
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
-import kotlinx.android.synthetic.main.fragment_day_view.*
 
 
 /**
@@ -40,24 +37,10 @@ class DayViewFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        weekView.setOnEventClickListener() { event: WeekViewEvent?, eventRect: RectF? ->
-            Log.d("Tag", "Clicked!");
+        mainActivity.todoViewModel!!.getTasks()
+                .observe(this, Observer<List<Task>> {tasks ->
 
-        }
-
-        weekView.setMonthChangeListener { newYear, newMonth ->
-            mainActivity.todoViewModel?.getTasksAsWeekViewEvent()
-        }
-
-        weekView.setEventLongPressListener { event, eventRect ->
-            Log.d("Tag", "Long Clicked!")
-        }
-
-//        mainActivity.todoViewModel!!.setOnTasksUpdatedListener =
-//                object : OnDayViewFragmentInteractionListener{
-//                    override fun onTaskClicked(task: Task) {
-//                    }
-//                }
+                })
     }
 
     override fun onAttach(context: Context?) {
