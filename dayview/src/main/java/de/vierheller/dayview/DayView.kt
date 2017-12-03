@@ -1,7 +1,12 @@
 package de.vierheller.dayview
 
 import android.content.Context
+import android.content.res.TypedArray
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 
 /**
@@ -11,8 +16,52 @@ import android.view.View
 class DayView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+    //Layout Attribute Defaults
+    private final val HOUR_HEIGHT_DEF = 50;
 
+    //Layout Attributes
+    private var hourHight:Int = HOUR_HEIGHT_DEF;
+
+    //Elements
     private var events: List<IEvent>? = null;
+
+    //Paints
+    private var hourLinePaint = Paint(Paint.ANTI_ALIAS_FLAG);
+
+
+
+    init {
+        if(attrs != null){
+            val a = context.theme.obtainStyledAttributes(attrs, R.styleable.DayView, 0,0)
+
+            applyAttributes(a);
+        }
+
+        hourLinePaint.style = Paint.Style.FILL;
+        hourLinePaint.color = Color.GRAY;
+    }
+
+    fun applyAttributes(a: TypedArray){
+        try{
+            hourHight = a.getInteger(R.styleable.DayView_hourHeight, HOUR_HEIGHT_DEF)
+        }finally {
+            a.recycle()
+        }
+    }
+
+
+
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+
+        Log.d("View", width.toString());
+
+        for(x in 1..24){
+            canvas?.drawLine(0f, (x*hourHight).toFloat() , width.toFloat(), (x*hourHight).toFloat(), Paint())
+        }
+    }
+
+
 
 
     fun setEvents(events:List<IEvent>){
