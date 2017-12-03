@@ -22,8 +22,6 @@ class Task(@PrimaryKey(autoGenerate = true)
         return "Task(uid=$uid, parent_todo_id=$parent_todo_id, name='$taskName', duration_min=$durationMin, buffer_time=$bufferTime, priority=$priority, note='$note')"
     }
 
-
-
     fun getStartTime(): Calendar {
         var cal: Calendar = Calendar.getInstance();
         cal.timeInMillis = startDate
