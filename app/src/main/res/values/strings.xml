@@ -12,4 +12,5 @@
     <string name="nav_main_calendar">Calendar</string>
     <string name="nav_main_list">List</string>
     <string name="nav_main_projects">Projects</string>
+    <string name="activity_task_name_hint">Name</string>
 </resources>
