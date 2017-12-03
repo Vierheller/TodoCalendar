@@ -20,14 +20,16 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_task" />
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="right|center_vertical|center_horizontal|end"
         android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/toolbar"
+        app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@android:drawable/ic_dialog_email" />
+
+    <include layout="@layout/content_task" />
 
 </android.support.design.widget.CoordinatorLayout>
