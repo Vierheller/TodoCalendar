@@ -47,6 +47,7 @@ class ListViewFragment : Fragment() {
 
         recyclerList.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
+        layoutManager.isAutoMeasureEnabled = false
         recyclerList.layoutManager = layoutManager
 
 
@@ -104,7 +105,7 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
         val masterView:View;
 
         masterView = LayoutInflater.from(parent!!.context)
-                .inflate(R.layout.list_item_task, parent, false);
+                .inflate(R.layout.list_item_task, parent!!, false);
 
         val title = masterView.find<TextView>(R.id.item_list_task_title);
 
