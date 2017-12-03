@@ -120,7 +120,6 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
     }
 
     override fun getItemCount(): Int {
-        Log.d("View holder ","ViewHolder size ${items?.size.toString()}")
         return items?.size ?: 0;
     }
 

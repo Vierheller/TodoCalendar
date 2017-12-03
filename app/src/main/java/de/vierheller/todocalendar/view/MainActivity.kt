@@ -2,7 +2,9 @@ package de.vierheller.todocalendar.view
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -25,10 +27,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     val listViewFragment:ListViewFragment = ListViewFragment();
     val dayViewFragment:DayViewFragment = DayViewFragment();
+    lateinit var currentFragment:Fragment;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("Tag", "ON CREATE MAIN ACTIVITY")
         TodoCalendarApplication.graph.inject(this);
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -47,8 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            startActivity(Intent(this, TaskActivity::class.java))
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -59,6 +63,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         openFragment(listViewFragment)
+
+        onRestoreInstanceState(savedInstanceState)
     }
 
     private fun openFragment(fragment:Fragment){
@@ -76,6 +82,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = getString(R.string.nav_main_list)
             }
         }
+        currentFragment = fragment
     }
 
 
@@ -85,6 +92,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        Log.d("TAG", "Save Called! ${currentFragment::class.java.canonicalName}")
+
+        outState!!.putString(STATE_FRAGMENT, currentFragment::class.java.canonicalName);
+        super.onSaveInstanceState(outState, outPersistentState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        Log.d("TAG", "Restore Called!")
+        val fragment_name = savedInstanceState?.getString(STATE_FRAGMENT);
+        when(fragment_name){
+            DayViewFragment::class.java.canonicalName ->{
+                openFragment(dayViewFragment)
+            }
+
+            ListViewFragment::class.java.canonicalName ->{
+                openFragment(listViewFragment)
+            }
+
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -125,5 +155,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onTaskClicked(task: Task) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    companion object {
+        val STATE_FRAGMENT = "FRAGMENT_STATE"
     }
 }
