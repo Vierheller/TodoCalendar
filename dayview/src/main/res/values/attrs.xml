@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="DayView">
         <attr name="showText" format="boolean" />
-        <attr name=""
+        <attr name="hourHeight" format="integer"/>
         <attr name="labelPosition" format="enum">
             <enum name="left" value="0"/>
             <enum name="right" value="1"/>
