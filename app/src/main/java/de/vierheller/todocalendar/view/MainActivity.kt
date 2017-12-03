@@ -23,6 +23,10 @@ import java.util.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DayViewFragment.OnDayViewFragmentInteractionListener, ListViewFragment.OnFragmentInteractionListener {
     var todoViewModel : TodoViewModel? = null;
 
+    val listViewFragment:ListViewFragment = ListViewFragment();
+    val dayViewFragment:DayViewFragment = DayViewFragment();
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TodoCalendarApplication.graph.inject(this);
@@ -54,14 +58,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        openFragment(ListViewFragment())
+        openFragment(listViewFragment)
     }
 
     private fun openFragment(fragment:Fragment){
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.fragment_container, fragment)
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
         fragmentTransaction.commit()
+
+        when(fragment){
+            is DayViewFragment -> {
+                title = getString(R.string.nav_main_calendar)
+            }
+
+            is ListViewFragment ->{
+                title = getString(R.string.nav_main_list)
+            }
+        }
     }
 
 
@@ -94,22 +108,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
+            R.id.nav_calendar -> {
+                openFragment(dayViewFragment)
             }
-            R.id.nav_gallery -> {
-
+            R.id.nav_list -> {
+                openFragment(listViewFragment)
             }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
+            R.id.nav_projects -> {
 
             }
         }

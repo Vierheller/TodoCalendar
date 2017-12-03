@@ -10,4 +10,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_task">TaskActivity</string>
+    <string name="nav_main_calendar">Calendar</string>
+    <string name="nav_main_list">List</string>
+    <string name="nav_main_projects">Projects</string>
 </resources>
