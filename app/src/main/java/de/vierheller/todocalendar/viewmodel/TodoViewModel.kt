@@ -48,6 +48,6 @@ class TodoViewModel : ViewModel(){
     }
 
     public interface OnTasksUpdatedListener{
-        fun onWeekViewTasksUpdated();
+        fun onWeekViewTasksUpdated() : ()->Unit;
     }
 }

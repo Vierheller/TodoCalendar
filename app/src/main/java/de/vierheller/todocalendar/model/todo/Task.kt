@@ -7,7 +7,6 @@ import java.util.*
 /**
  * Created by Vierheller on 01.11.2017.
  */
-
 @Entity(tableName = "tasks")
 class Task(@PrimaryKey(autoGenerate = true)
            val uid: Long = 0,
@@ -37,7 +36,4 @@ class Task(@PrimaryKey(autoGenerate = true)
         endDate.add(Calendar.MINUTE, durationMin + bufferTime);
         return endDate;
     }
-
-
-
 }
