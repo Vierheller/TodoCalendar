@@ -4,7 +4,9 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,11 +45,17 @@ class ListViewFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        recyclerList.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(activity)
+        recyclerList.layoutManager = layoutManager
+
+
         adaper = RecyclerTaskListAdapter(null);
         recyclerList.adapter = adaper;
 
         (activity as MainActivity).todoViewModel!!.getTasks()
                 .observe(this, Observer<List<Task>> { tasks ->
+                    Log.d("ListVierwFragment", "${tasks?.size.toString()} available ")
                     adaper.items = tasks
                     adaper.notifyDataSetChanged()
             })
@@ -111,6 +119,7 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
     }
 
     override fun getItemCount(): Int {
+        Log.d("View holder ","ViewHolder size ${items?.size.toString()}")
         return items?.size ?: 0;
     }
 
