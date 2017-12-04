@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import de.vierheller.todocalendar.R
 import kotlinx.android.synthetic.main.activity_task.*
 import kotlinx.android.synthetic.main.content_task.*
 import org.jetbrains.anko.find
+import org.jetbrains.anko.image
 
 class TaskActivity : AppCompatActivity() {
 
@@ -26,15 +28,16 @@ class TaskActivity : AppCompatActivity() {
                     .setAction("Action", null).show()
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        settingslistview.adapter = ListViewAdapter(this, resources.getStringArray(R.array.task_settings).toList())
+        val namesArray = resources.getStringArray(R.array.task_settings_name).toList()
+        val imageArray = resources.getIntArray(R.array.task_settings_images).toList()
+        settingslistview.adapter = ListViewAdapter(this, namesArray, imageArray)
     }
 
 
 
 }
 
-class ListViewAdapter(val context: Context, var objects:List<String>): BaseAdapter() {
+class ListViewAdapter(val context: Context, var names:List<String>, var icons:List<Int>): BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val inflator = LayoutInflater.from(context);
 
@@ -43,13 +46,14 @@ class ListViewAdapter(val context: Context, var objects:List<String>): BaseAdapt
         if(view == null)
             view = inflator.inflate(R.layout.list_item_settings, parent, false);
 
-        view!!.find<TextView>(R.id.name).text = getItem(position).toString()
-
+        view!!.find<TextView>(R.id.settings_name).text = getItem(position).toString()
+        view!!.find<ImageView>(R.id.settings_image).image = context.getDrawable(icons[position])
+        ;
         return view;
     }
 
     override fun getItem(position: Int): Any {
-        return objects[position]
+        return names[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -57,7 +61,7 @@ class ListViewAdapter(val context: Context, var objects:List<String>): BaseAdapt
     }
 
     override fun getCount(): Int {
-        return objects.size;
+        return names.size;
     }
 }
 
