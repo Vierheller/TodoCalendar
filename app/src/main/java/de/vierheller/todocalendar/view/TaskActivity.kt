@@ -64,13 +64,13 @@ class TaskActivity : AppCompatActivity() {
         if(task_id > -1){
             //Getting from DB
             val dbTask = todoViewModel.todoRepo.getTodo(task_id)
-    task.setValue(dbTask)
-} else {
-    //Initialize with default values
-    val newTask = Task(taskName = "", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, priority = Priority.MEDIUM.level)
-    task.setValue(newTask)
-}
-}
+            task.setValue(dbTask)
+        } else {
+            //Initialize with default values
+            val newTask = Task(taskName = "", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, priority = Priority.MEDIUM.level)
+            task.setValue(newTask)
+        }
+    }
 
     companion object {
         val INTENT_ID:String = "id";
