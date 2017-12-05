@@ -75,8 +75,9 @@ class TaskActivity : AppCompatActivity() {
         val taskId = intent.getLongExtra(INTENT_ID, -1)
         if(taskId > -1){
             //Getting from DB
-            val dbTask = todoViewModel.getTodo(taskId)
-            task.setValue(dbTask)
+            todoViewModel.getTodo(taskId){ dbTask ->
+                task.setValue(dbTask)
+            }
         } else {
             //Initialize with default values
             val newTask = Task(taskName = "Is this freedom?", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, priority = Priority.MEDIUM.level)

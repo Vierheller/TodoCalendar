@@ -6,6 +6,8 @@ import android.arch.lifecycle.ViewModel
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.repository.TodoRepository
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 /**
@@ -35,8 +37,13 @@ class TodoViewModel : ViewModel(){
         todoRepo.putTodo(entity)
     }
 
-    fun getTodo(id:Long): Task {
-        return todoRepo.getTodo(id)
+    fun getTodo(id:Long, listener:((Task) -> Unit)) {
+        doAsync {
+            val task = todoRepo.getTodo(id);
+            uiThread {
+                listener.invoke(task)
+            }
+        }
     }
 
     fun getTasks():LiveData<List<Task>>{
