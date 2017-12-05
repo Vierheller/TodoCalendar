@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.content.res.TypedArray
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
@@ -38,9 +37,9 @@ class TaskActivity : AppCompatActivity() {
         parseIntent()
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            todoViewModel.addTodo(task.value!!)
         }
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val imageResArray  = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_images))
@@ -63,7 +62,7 @@ class TaskActivity : AppCompatActivity() {
         val task_id = intent.getLongExtra(INTENT_ID, -1);
         if(task_id > -1){
             //Getting from DB
-            val dbTask = todoViewModel.todoRepo.getTodo(task_id)
+            val dbTask = todoViewModel.getTodo(task_id)
             task.setValue(dbTask)
         } else {
             //Initialize with default values

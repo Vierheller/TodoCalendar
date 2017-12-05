@@ -35,6 +35,10 @@ class TodoViewModel : ViewModel(){
         todoRepo.putTodo(entity)
     }
 
+    public fun getTodo(id:Long): Task {
+        return todoRepo.getTodo(id);
+    }
+
     fun getTasks():LiveData<List<Task>>{
         if(tasks==null){
             tasks = MutableLiveData<List<Task>>()
