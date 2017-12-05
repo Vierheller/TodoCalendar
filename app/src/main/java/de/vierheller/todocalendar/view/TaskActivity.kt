@@ -45,18 +45,18 @@ class TaskActivity : AppCompatActivity() {
         val imageResArray  = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_images))
         val nameResArray   = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_name))
 
-        settingslistview.adapter = ListViewAdapter(this, nameResArray, imageResArray, task)
+        settings_list_view.adapter = ListViewAdapter(this, nameResArray, imageResArray, task)
     }
 
 
 
     fun parseIntent(){
-        task = MutableLiveData<Task>()
+        task = MutableLiveData()
 
-        val task_id = intent.getLongExtra(INTENT_ID, -1)
-        if(task_id > -1){
+        val taskId = intent.getLongExtra(INTENT_ID, -1)
+        if(taskId > -1){
             //Getting from DB
-            val dbTask = todoViewModel.getTodo(task_id)
+            val dbTask = todoViewModel.getTodo(taskId)
             task.setValue(dbTask)
         } else {
             //Initialize with default values
@@ -73,12 +73,12 @@ class TaskActivity : AppCompatActivity() {
 
 class ListViewAdapter(val activity: TaskActivity, var names:List<Int>, var icons:List<Int>, var task:LiveData<Task>): BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val inflator = LayoutInflater.from(activity)
+        val inflater = LayoutInflater.from(activity)
 
         var view = convertView
 
         if(view == null)
-            view = inflator.inflate(R.layout.list_item_settings, parent, false)!!
+            view = inflater.inflate(R.layout.list_item_settings, parent, false)!!
 
         val tvName  = view.find<TextView>(R.id.settings_name)
         val tvValue = view.find<TextView>(R.id.settings_value)

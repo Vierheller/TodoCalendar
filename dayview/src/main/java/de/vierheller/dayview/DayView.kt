@@ -17,16 +17,16 @@ class DayView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     //Layout Attribute Defaults
-    private final val HOUR_HEIGHT_DEF = 50;
+    private val HOUR_HEIGHT_DEF = 50
 
     //Layout Attributes
-    private var hourHight:Int = HOUR_HEIGHT_DEF;
+    private var hourHeight:Int = HOUR_HEIGHT_DEF
 
     //Elements
-    private var events: List<IEvent>? = null;
+    private var events: List<IEvent>? = null
 
     //Paints
-    private var hourLinePaint = Paint(Paint.ANTI_ALIAS_FLAG);
+    private var hourLinePaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
 
 
@@ -34,16 +34,16 @@ class DayView @JvmOverloads constructor(
         if(attrs != null){
             val a = context.theme.obtainStyledAttributes(attrs, R.styleable.DayView, 0,0)
 
-            applyAttributes(a);
+            applyAttributes(a)
         }
 
-        hourLinePaint.style = Paint.Style.FILL;
-        hourLinePaint.color = Color.GRAY;
+        hourLinePaint.style = Paint.Style.FILL
+        hourLinePaint.color = Color.GRAY
     }
 
     fun applyAttributes(a: TypedArray){
         try{
-            hourHight = a.getInteger(R.styleable.DayView_hourHeight, HOUR_HEIGHT_DEF)
+            hourHeight = a.getInteger(R.styleable.DayView_hourHeight, HOUR_HEIGHT_DEF)
         }finally {
             a.recycle()
         }
@@ -54,10 +54,10 @@ class DayView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        Log.d("View", width.toString());
+        Log.d("View", width.toString())
 
         for(x in 1..24){
-            canvas?.drawLine(0f, (x*hourHight).toFloat() , width.toFloat(), (x*hourHight).toFloat(), Paint())
+            canvas?.drawLine(0f, (x* hourHeight).toFloat() , width.toFloat(), (x* hourHeight).toFloat(), Paint())
         }
     }
 
@@ -65,11 +65,11 @@ class DayView @JvmOverloads constructor(
 
 
     fun setEvents(events:List<IEvent>){
-        this.events = events;
+        this.events = events
     }
 
     fun clearEvents(){
-        this.events = null;
+        this.events = null
     }
 
 

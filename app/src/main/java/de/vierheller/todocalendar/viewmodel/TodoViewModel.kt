@@ -31,12 +31,12 @@ class TodoViewModel : ViewModel(){
         onTasksUpdatedObservers.remove(listener)
     }
 
-    public fun addTodo(entity: Task){
+    fun addTodo(entity: Task){
         todoRepo.putTodo(entity)
     }
 
-    public fun getTodo(id:Long): Task {
-        return todoRepo.getTodo(id);
+    fun getTodo(id:Long): Task {
+        return todoRepo.getTodo(id)
     }
 
     fun getTasks():LiveData<List<Task>>{
@@ -48,10 +48,10 @@ class TodoViewModel : ViewModel(){
     }
 
     private fun loadTasks() {
-        tasks = todoRepo.getTodosLive();
+        tasks = todoRepo.getTodosLive()
     }
 
     public interface OnTasksUpdatedListener{
-        fun onWeekViewTasksUpdated() : ()->Unit;
+        fun onWeekViewTasksUpdated() : ()->Unit
     }
 }

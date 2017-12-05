@@ -23,7 +23,7 @@
             android:id="@+id/settings_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="@string/placeholder"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/settings_value"
             app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="TextView"
+            android:text="@string/placeholder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="66dp" />
@@ -51,6 +51,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@mipmap/ic_launcher"
+        android:contentDescription="@string/list_item_settings_image_description" />
 
 </android.support.constraint.ConstraintLayout>

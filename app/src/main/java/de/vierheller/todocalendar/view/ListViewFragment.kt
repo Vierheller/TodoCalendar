@@ -29,7 +29,7 @@ import org.jetbrains.anko.find
 class ListViewFragment : Fragment() {
     private var mListener: OnFragmentInteractionListener? = null
 
-    lateinit var adaper:RecyclerTaskListAdapter;
+    lateinit var adapter:RecyclerTaskListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,14 +51,14 @@ class ListViewFragment : Fragment() {
         recyclerList.layoutManager = layoutManager
 
 
-        adaper = RecyclerTaskListAdapter(null);
-        recyclerList.adapter = adaper;
+        adapter = RecyclerTaskListAdapter(null)
+        recyclerList.adapter = adapter
 
-        (activity as MainActivity).todoViewModel!!.getTasks()
+        (activity as MainActivity).todoViewModel.getTasks()
                 .observe(this, Observer<List<Task>> { tasks ->
-                    Log.d("ListVierwFragment", "${tasks?.size.toString()} available ")
-                    adaper.items = tasks
-                    adaper.notifyDataSetChanged()
+                    Log.d("ListViewFragment", "${tasks?.size.toString()} available ")
+                    adapter.items = tasks
+                    adapter.notifyDataSetChanged()
             })
 
     }
@@ -102,25 +102,25 @@ class ListViewFragment : Fragment() {
 class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        val masterView:View;
+        val masterView:View
 
         masterView = LayoutInflater.from(parent!!.context)
-                .inflate(R.layout.list_item_task, parent!!, false);
+                .inflate(R.layout.list_item_task, parent, false)
 
-        val title = masterView.find<TextView>(R.id.item_list_task_title);
+        val title = masterView.find<TextView>(R.id.item_list_task_title)
 
-        return TaskViewHolder(masterView, title);
+        return TaskViewHolder(masterView, title)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        val task: Task = items!![position];
+        val task: Task = items!![position]
 
-        val cur_holder = holder as TaskViewHolder;
-        cur_holder.title.text = task.taskName;
+        val curHolder = holder as TaskViewHolder
+        curHolder.title.text = task.taskName
     }
 
     override fun getItemCount(): Int {
-        return items?.size ?: 0;
+        return items?.size ?: 0
     }
 
 

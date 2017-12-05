@@ -109,8 +109,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         Log.d("TAG", "Restore Called!")
-        val fragment_name = savedInstanceState?.getString(STATE_FRAGMENT)
-        when(fragment_name){
+        val fragmentName = savedInstanceState?.getString(STATE_FRAGMENT)
+        when(fragmentName){
             DayViewFragment::class.java.canonicalName ->{
                 openFragment(dayViewFragment)
             }

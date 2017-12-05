@@ -18,4 +18,6 @@
     <string name="task_setting_duration">Duration</string>
     <string name="task_setting_buffer">Buffer</string>
     <string name="task_setting_priority">Priority</string>
+    <string name="list_item_settings_image_description">Settings icon</string>
+    <string name="placeholder">Placeholder</string>
 </resources>

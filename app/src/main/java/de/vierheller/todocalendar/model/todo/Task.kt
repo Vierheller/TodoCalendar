@@ -23,15 +23,15 @@ class Task(@PrimaryKey(autoGenerate = true)
     }
 
     fun getStartTime(): Calendar {
-        var cal: Calendar = Calendar.getInstance();
+        var cal: Calendar = Calendar.getInstance()
         cal.timeInMillis = startDate
-        return cal;
+        return cal
     }
 
     fun getEndTime(): Calendar {
-        var endDate:Calendar = Calendar.getInstance();
+        var endDate:Calendar = Calendar.getInstance()
         endDate.timeInMillis = startDate
-        endDate.add(Calendar.MINUTE, durationMin + bufferTime);
-        return endDate;
+        endDate.add(Calendar.MINUTE, durationMin + bufferTime)
+        return endDate
     }
 }

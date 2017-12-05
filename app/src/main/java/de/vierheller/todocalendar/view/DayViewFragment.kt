@@ -37,7 +37,7 @@ class DayViewFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainActivity.todoViewModel!!.getTasks()
+        mainActivity.todoViewModel.getTasks()
                 .observe(this, Observer<List<Task>> {tasks ->
 
                 })

@@ -13,7 +13,7 @@ class TodoModule() {
 
     @Provides
     @Singleton
-    public fun providesTodoRepository(): TodoRepository {
-        return TodoRepository();
+    fun providesTodoRepository(): TodoRepository {
+        return TodoRepository()
     }
 }

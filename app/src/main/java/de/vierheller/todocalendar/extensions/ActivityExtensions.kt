@@ -11,7 +11,7 @@ import android.content.res.TypedArray
  * This function returns an Array of ResourceIds based on the resourceArray provided
  */
 fun Activity.getListFromResourceArray(resourceArray: TypedArray): List<Int> {
-    val list = List<Int>(resourceArray.length()) { i ->
+    val list = List(resourceArray.length()) { i ->
         resourceArray.getResourceId(i, -1)
     }
     resourceArray.recycle()

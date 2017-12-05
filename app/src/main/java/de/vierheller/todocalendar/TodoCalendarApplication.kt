@@ -19,7 +19,7 @@ class TodoCalendarApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        graph = DaggerApplicationComponent.builder().todoModule(TodoModule()).build();
+        graph = DaggerApplicationComponent.builder().todoModule(TodoModule()).build()
         graph.inject(this)
         database =  Room.databaseBuilder(this, MyDatabase::class.java, "todo-calendar-db").build()
     }
