@@ -38,6 +38,7 @@ class TaskActivity : AppCompatActivity() {
 
         fab.setOnClickListener { view ->
             todoViewModel.addTodo(task.value!!)
+            finish()
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -46,6 +47,10 @@ class TaskActivity : AppCompatActivity() {
         val nameResArray   = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_name))
 
         settings_list_view.adapter = ListViewAdapter(this, nameResArray, imageResArray, task)
+
+        task.observe(this, android.arch.lifecycle.Observer { task ->
+            activity_task_title.setText(task!!.taskName)
+        })
     }
 
 
@@ -60,7 +65,7 @@ class TaskActivity : AppCompatActivity() {
             task.setValue(dbTask)
         } else {
             //Initialize with default values
-            val newTask = Task(taskName = "", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, priority = Priority.MEDIUM.level)
+            val newTask = Task(taskName = "Is this freedom?", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, priority = Priority.MEDIUM.level)
             task.setValue(newTask)
         }
     }

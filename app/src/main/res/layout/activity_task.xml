@@ -30,10 +30,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_task_header_margin"
                 android:layout_weight="1"
-                android:text="@string/placeholder" />
+                android:text="@string/tv_task_title" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/activity_task_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_task_header_margin"

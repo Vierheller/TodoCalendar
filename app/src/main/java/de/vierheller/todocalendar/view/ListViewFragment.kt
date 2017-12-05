@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -28,7 +27,7 @@ import org.jetbrains.anko.find
  */
 class ListViewFragment : Fragment() {
     private var mListener: OnFragmentInteractionListener? = null
-
+    lateinit var mActivity:MainActivity
     lateinit var adapter:RecyclerTaskListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +44,8 @@ class ListViewFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mActivity = activity as MainActivity
+
         recyclerList.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.isAutoMeasureEnabled = false
@@ -52,7 +53,12 @@ class ListViewFragment : Fragment() {
 
 
         adapter = RecyclerTaskListAdapter(null)
+        adapter.setOnClickListener { v ->
+            val id = recyclerList.getChildItemId(v)
+            mActivity.startTaskActivity(id)
+        }
         recyclerList.adapter = adapter
+
 
         (activity as MainActivity).todoViewModel.getTasks()
                 .observe(this, Observer<List<Task>> { tasks ->
@@ -101,15 +107,33 @@ class ListViewFragment : Fragment() {
 
 class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private var listener: ((View) -> Unit)? = null
+
+    fun setOnClickListener(listener:(View)->Unit){
+        this.listener = listener
+    }
+
+    fun removeOnClicklistener(){
+        this.listener = null
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         val masterView:View
 
         masterView = LayoutInflater.from(parent!!.context)
                 .inflate(R.layout.list_item_task, parent, false)
 
+        masterView.setOnClickListener{
+            listener?.invoke(masterView)
+        }
+
         val title = masterView.find<TextView>(R.id.item_list_task_title)
 
         return TaskViewHolder(masterView, title)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return items?.get(position)?.uid?:-1
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
