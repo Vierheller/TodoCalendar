@@ -22,18 +22,18 @@ import org.jetbrains.anko.intentFor
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DayViewFragment.OnDayViewFragmentInteractionListener, ListViewFragment.OnFragmentInteractionListener {
-    lateinit var todoViewModel : TodoViewModel;
+    lateinit var todoViewModel : TodoViewModel
 
-    val listViewFragment:ListViewFragment = ListViewFragment();
-    val dayViewFragment:DayViewFragment = DayViewFragment();
-    lateinit var currentFragment:Fragment;
+    val listViewFragment:ListViewFragment = ListViewFragment()
+    val dayViewFragment:DayViewFragment = DayViewFragment()
+    lateinit var currentFragment:Fragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Log.d("Tag", "ON CREATE MAIN ACTIVITY")
-        TodoCalendarApplication.graph.inject(this);
+        TodoCalendarApplication.graph.inject(this)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
@@ -103,13 +103,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         Log.d("TAG", "Save Called! ${currentFragment::class.java.canonicalName}")
 
-        outState!!.putString(STATE_FRAGMENT, currentFragment::class.java.canonicalName);
+        outState!!.putString(STATE_FRAGMENT, currentFragment::class.java.canonicalName)
         super.onSaveInstanceState(outState, outPersistentState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         Log.d("TAG", "Restore Called!")
-        val fragment_name = savedInstanceState?.getString(STATE_FRAGMENT);
+        val fragment_name = savedInstanceState?.getString(STATE_FRAGMENT)
         when(fragment_name){
             DayViewFragment::class.java.canonicalName ->{
                 openFragment(dayViewFragment)

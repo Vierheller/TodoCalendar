@@ -23,7 +23,7 @@ import org.jetbrains.anko.image
 import java.util.*
 
 class TaskActivity : AppCompatActivity() {
-    private lateinit var todoViewModel : TodoViewModel;
+    private lateinit var todoViewModel : TodoViewModel
 
     lateinit var task: MutableLiveData<Task>
 
@@ -71,7 +71,7 @@ class TaskActivity : AppCompatActivity() {
 
 }
 
-class ListViewAdapter(val activity: TaskActivity, var names:MutableList<Int>, var icons:MutableList<Int>, var task:LiveData<Task>): BaseAdapter() {
+class ListViewAdapter(val activity: TaskActivity, var names:List<Int>, var icons:List<Int>, var task:LiveData<Task>): BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val inflator = LayoutInflater.from(activity)
 
@@ -80,7 +80,7 @@ class ListViewAdapter(val activity: TaskActivity, var names:MutableList<Int>, va
         if(view == null)
             view = inflator.inflate(R.layout.list_item_settings, parent, false)!!
 
-        val tvName = view.find<TextView>(R.id.settings_name)
+        val tvName  = view.find<TextView>(R.id.settings_name)
         val tvValue = view.find<TextView>(R.id.settings_value)
         val ivImage = view.find<ImageView>(R.id.settings_image)
 
