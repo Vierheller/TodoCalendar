@@ -3,7 +3,6 @@ package de.vierheller.todocalendar.view
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
-import android.content.res.TypedArray
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -13,6 +12,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import de.vierheller.todocalendar.R
+import de.vierheller.todocalendar.extensions.getListFromResourceArray
 import de.vierheller.todocalendar.model.todo.Priority
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.viewmodel.TodoViewModel
@@ -23,7 +23,7 @@ import org.jetbrains.anko.image
 import java.util.*
 
 class TaskActivity : AppCompatActivity() {
-    lateinit var todoViewModel : TodoViewModel;
+    private lateinit var todoViewModel : TodoViewModel;
 
     lateinit var task: MutableLiveData<Task>
 
@@ -43,23 +43,17 @@ class TaskActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val imageResArray  = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_images))
-        val nameResArray        = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_name))
+        val nameResArray   = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_name))
 
         settingslistview.adapter = ListViewAdapter(this, nameResArray, imageResArray, task)
     }
 
-    fun getListFromResourceArray(resourceArray:TypedArray): MutableList<Int> {
-        val list = MutableList<Int>(resourceArray.length()) { i ->
-            resourceArray.getResourceId(i, -1)
-        }
-        resourceArray.recycle()
-        return list
-    }
+
 
     fun parseIntent(){
-        task = MutableLiveData<Task>();
+        task = MutableLiveData<Task>()
 
-        val task_id = intent.getLongExtra(INTENT_ID, -1);
+        val task_id = intent.getLongExtra(INTENT_ID, -1)
         if(task_id > -1){
             //Getting from DB
             val dbTask = todoViewModel.getTodo(task_id)
@@ -72,25 +66,25 @@ class TaskActivity : AppCompatActivity() {
     }
 
     companion object {
-        val INTENT_ID:String = "id";
+        val INTENT_ID:String = "id"
     }
 
 }
 
 class ListViewAdapter(val activity: TaskActivity, var names:MutableList<Int>, var icons:MutableList<Int>, var task:LiveData<Task>): BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val inflator = LayoutInflater.from(activity);
+        val inflator = LayoutInflater.from(activity)
 
         var view = convertView
 
         if(view == null)
-            view = inflator.inflate(R.layout.list_item_settings, parent, false)!!;
+            view = inflator.inflate(R.layout.list_item_settings, parent, false)!!
 
         val tvName = view.find<TextView>(R.id.settings_name)
         val tvValue = view.find<TextView>(R.id.settings_value)
         val ivImage = view.find<ImageView>(R.id.settings_image)
 
-        tvName.text = activity.getString(getItem(position));
+        tvName.text = activity.getString(getItem(position))
 
         task.observe(activity, android.arch.lifecycle.Observer { task->
             when(getItem(position)){
@@ -114,7 +108,7 @@ class ListViewAdapter(val activity: TaskActivity, var names:MutableList<Int>, va
 
         ivImage.image = activity.getDrawable(icons[position])
 
-        return view;
+        return view
     }
 
     override fun getItem(position: Int): Int {
@@ -126,7 +120,7 @@ class ListViewAdapter(val activity: TaskActivity, var names:MutableList<Int>, va
     }
 
     override fun getCount(): Int {
-        return names.size;
+        return names.size
     }
 }
 
