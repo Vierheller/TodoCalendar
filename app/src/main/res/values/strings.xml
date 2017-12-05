@@ -13,4 +13,9 @@
     <string name="nav_main_list">List</string>
     <string name="nav_main_projects">Projects</string>
     <string name="activity_task_name_hint">Name</string>
+
+    <string name="task_setting_start_time">Start Time</string>
+    <string name="task_setting_duration">Duration</string>
+    <string name="task_setting_buffer">Buffer</string>
+    <string name="task_setting_priority">Priority</string>
 </resources>

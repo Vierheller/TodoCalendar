@@ -22,7 +22,7 @@ import org.jetbrains.anko.intentFor
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DayViewFragment.OnDayViewFragmentInteractionListener, ListViewFragment.OnFragmentInteractionListener {
-    var todoViewModel : TodoViewModel? = null;
+    lateinit var todoViewModel : TodoViewModel;
 
     val listViewFragment:ListViewFragment = ListViewFragment();
     val dayViewFragment:DayViewFragment = DayViewFragment();
@@ -39,8 +39,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel::class.java)
 
-        todoViewModel?.addTodo(Task(taskName = "Test", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, bufferTime = 0, priority = 0))
-        todoViewModel?.getTasks()?.observe(this, Observer {
+        todoViewModel.addTodo(Task(taskName = "Test", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, bufferTime = 0, priority = 0))
+        todoViewModel.getTasks().observe(this, Observer {
             Log.d("TAG", "Data is null")
             if(it!=null) {
                 Log.d("TAG", "Length = " + it.size)
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
 
         fab.setOnClickListener { view ->
-            startActivity(intentFor<TaskActivity>())
+            startTaskActivity(null)
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -64,6 +64,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         openFragment(listViewFragment)
 
         onRestoreInstanceState(savedInstanceState)
+    }
+
+    fun startTaskActivity(taskId:Long?){
+        if(taskId != null)
+            startActivity(intentFor<TaskActivity>(TaskActivity.INTENT_ID to taskId))
+        else
+            startActivity(intentFor<TaskActivity>())
     }
 
     private fun openFragment(fragment:Fragment){

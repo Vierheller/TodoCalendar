@@ -11,6 +11,13 @@ import android.arch.persistence.room.Query
  */
 @Dao
 interface TodoDao {
+    @Query("SELECT * FROM tasks WHERE uid = :id")
+    fun getTodoLive(id:Long):LiveData<Task>
+
+    @Query("SELECT * FROM tasks WHERE uid = :id")
+    fun getTodo(id:Long):Task
+
+
     @Query("SELECT * FROM tasks")
     fun getAllTodosLive(): LiveData<List<Task>>
 

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="task_settings_name">
-        <item>Start</item>
-        <item>Duration</item>
-        <item>Buffer</item>
-        <item>Priority</item>
-    </string-array>
+    <integer-array name="task_settings_name">
+        <item>@string/task_setting_start_time</item>
+        <item>@string/task_setting_duration</item>
+        <item>@string/task_setting_buffer</item>
+        <item>@string/task_setting_priority</item>
+    </integer-array>
     <integer-array name="task_settings_images">
         <item>@drawable/ic_menu_camera</item>
         <item>@drawable/ic_menu_manage</item>
         <item>@drawable/ic_menu_gallery</item>
         <item>@drawable/ic_menu_manage</item>
     </integer-array>
+
 </resources>

@@ -20,6 +20,15 @@ class TodoRepository(){
         }
     }
 
+    fun getTodoLive(id:Long):LiveData<Task>{
+        return TodoCalendarApplication.database.TodoDao().getTodoLive(id)
+    }
+
+
+    fun getTodo(id:Long):Task{
+        return TodoCalendarApplication.database.TodoDao().getTodo(id)
+    }
+
     fun getTodos():List<Task>{
         return TodoCalendarApplication.database.TodoDao().getAllTodos();
     }
