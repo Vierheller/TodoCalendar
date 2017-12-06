@@ -5,6 +5,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +50,18 @@ class TaskActivity : AppCompatActivity() {
 
         settings_list_view.adapter = ListViewAdapter(this, nameResArray, imageResArray, task)
 
+        activity_task_title.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(text: Editable?) {
+                task.value!!.taskName = text.toString()
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
         task.observe(this, android.arch.lifecycle.Observer { task ->
             activity_task_title.setText(task!!.taskName)
         })
@@ -61,8 +75,9 @@ class TaskActivity : AppCompatActivity() {
         val taskId = intent.getLongExtra(INTENT_ID, -1)
         if(taskId > -1){
             //Getting from DB
-            val dbTask = todoViewModel.getTodo(taskId)
-            task.setValue(dbTask)
+            todoViewModel.getTodo(taskId){ dbTask ->
+                task.setValue(dbTask)
+            }
         } else {
             //Initialize with default values
             val newTask = Task(taskName = "Is this freedom?", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, priority = Priority.MEDIUM.level)

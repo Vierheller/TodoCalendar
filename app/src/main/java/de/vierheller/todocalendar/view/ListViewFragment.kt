@@ -54,7 +54,9 @@ class ListViewFragment : Fragment() {
 
         adapter = RecyclerTaskListAdapter(null)
         adapter.setOnClickListener { v ->
-            val id = recyclerList.getChildItemId(v)
+            val pos = recyclerList.getChildLayoutPosition(v)
+            val id = adapter.getItemId(pos)
+            Log.d("Tag", "Clicked Task id:"+id)
             mActivity.startTaskActivity(id)
         }
         recyclerList.adapter = adapter
@@ -132,15 +134,15 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
         return TaskViewHolder(masterView, title)
     }
 
-    override fun getItemId(position: Int): Long {
-        return items?.get(position)?.uid?:-1
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val task: Task = items!![position]
 
         val curHolder = holder as TaskViewHolder
         curHolder.title.text = task.taskName
+    }
+
+    override fun getItemId(position: Int): Long {
+        return items?.get(position)?.uid!!
     }
 
     override fun getItemCount(): Int {
