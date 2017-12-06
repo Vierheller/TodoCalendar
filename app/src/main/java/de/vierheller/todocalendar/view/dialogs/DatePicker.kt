@@ -12,15 +12,23 @@ import de.vierheller.todocalendar.R
  */
 class DatePicker: DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = AlertDialog.Builder(activity)
-        dialog.setPositiveButton(R.string.dialog_accept){ dialog: DialogInterface, id: Int ->
+        val builder = AlertDialog.Builder(activity)
+
+        //Inflating custom datepicker view
+        val inflater = activity.layoutInflater;
+        val view = inflater.inflate(R.layout.dialog_datepicker, null)
+
+        //Adding view to dialog
+        builder.setView(view)
+
+        builder.setPositiveButton(R.string.dialog_accept){ dialog: DialogInterface, id: Int ->
 
         }
 
-        dialog.setNegativeButton(R.string.dialog_cancel){ dialog: DialogInterface, id: Int ->
+        builder.setNegativeButton(R.string.dialog_cancel){ dialog: DialogInterface, id: Int ->
 
         }
 
-        return dialog.create()
+        return builder.create()
     }
 }
