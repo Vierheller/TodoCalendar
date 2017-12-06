@@ -1,18 +1,19 @@
 package de.vierheller.todocalendar.view
 
+import android.app.DatePickerDialog
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.extensions.getListFromResourceArray
 import de.vierheller.todocalendar.model.todo.Priority
@@ -29,6 +30,7 @@ class TaskActivity : AppCompatActivity() {
 
     lateinit var task: MutableLiveData<Task>
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
@@ -49,6 +51,29 @@ class TaskActivity : AppCompatActivity() {
         val nameResArray   = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_name))
 
         settings_list_view.adapter = ListViewAdapter(this, nameResArray, imageResArray, task)
+        settings_list_view.setOnItemClickListener{ adapterView: AdapterView<*>, view: View, pos: Int, id: Long ->
+            when(nameResArray[pos]){
+                R.string.task_setting_start_time -> {
+                    val calendar = Calendar.getInstance()
+                    val listener = DatePickerDialog.OnDateSetListener{ datePicker: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+
+                    }
+                    val dialog = DatePickerDialog(this, listener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+                    dialog.show();
+                }
+
+                R.string.task_setting_duration -> {
+                }
+
+                R.string.task_setting_buffer -> {
+                }
+
+                R.string.task_setting_priority -> {
+                }
+            }
+        }
+
+
 
         activity_task_title.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(text: Editable?) {

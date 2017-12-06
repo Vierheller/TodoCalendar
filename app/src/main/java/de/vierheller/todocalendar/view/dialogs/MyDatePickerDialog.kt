@@ -10,7 +10,7 @@ import de.vierheller.todocalendar.R
 /**
  * Created by Vierheller on 06.12.2017.
  */
-class DatePicker: DialogFragment() {
+class MyDatePickerDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
 
