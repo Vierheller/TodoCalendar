@@ -1,9 +1,11 @@
 package de.vierheller.todocalendar.view
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
+import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -18,7 +20,6 @@ import android.widget.*
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.extensions.getListFromResourceArray
 import de.vierheller.todocalendar.model.todo.Priority
-import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.viewmodel.TodoViewModel
 import kotlinx.android.synthetic.main.activity_task.*
 import kotlinx.android.synthetic.main.content_task.*
@@ -26,15 +27,15 @@ import org.jetbrains.anko.find
 import org.jetbrains.anko.image
 import java.util.*
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
+import de.vierheller.todocalendar.viewmodel.TaskActivityViewModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 
 class TaskActivity : AppCompatActivity() {
-    private lateinit var todoViewModel : TodoViewModel
     private lateinit var listViewAdapter:ListViewAdapter
+    private lateinit var viewModel : TaskActivityViewModel
 
-    lateinit var task: MutableLiveData<Task>
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +43,11 @@ class TaskActivity : AppCompatActivity() {
         setContentView(R.layout.activity_task)
         setSupportActionBar(toolbar)
 
-        todoViewModel = ViewModelProviders.of(this).get(TodoViewModel::class.java)
-
-        parseIntent()
+        viewModel = ViewModelProviders.of(this).get(TaskActivityViewModel::class.java)
+        viewModel.init(intent)
 
         fab.setOnClickListener { view ->
-            todoViewModel.addTodo(task.value!!)
+            viewModel.save()
             finish()
         }
 
@@ -56,7 +56,7 @@ class TaskActivity : AppCompatActivity() {
         val imageResArray  = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_images))
         val nameResArray   = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_name))
 
-        listViewAdapter = ListViewAdapter(this, nameResArray, imageResArray, task)
+        listViewAdapter = ListViewAdapter(this, viewModel, nameResArray, imageResArray)
         settings_list_view.adapter = listViewAdapter
 
         settings_list_view.setOnItemClickListener{ adapterView: AdapterView<*>, view: View, pos: Int, id: Long ->
@@ -66,19 +66,31 @@ class TaskActivity : AppCompatActivity() {
                 }
 
                 R.string.task_setting_duration -> {
+
                 }
 
                 R.string.task_setting_buffer -> {
                 }
 
                 R.string.task_setting_priority -> {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle(R.string.task_setting_priority)
+                    builder.setItems(
+                            Priority.asStringArray(this),
+                            {dialogInterface, i ->
+                                viewModel.setPriorityFromIndex(i)
+                            }
+                        )
+                    val dialog = builder.create()
+                    dialog.show()
                 }
             }
         }
 
         activity_task_title.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(text: Editable?) {
-                task.value!!.taskName = text.toString()
+                viewModel.setTaskName(text.toString())
+                Log.d(TAG, "Text changed to ${text}")
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -89,8 +101,10 @@ class TaskActivity : AppCompatActivity() {
 
         })
 
-        task.observe(this, android.arch.lifecycle.Observer { task ->
+        viewModel.getTask().observe(this, android.arch.lifecycle.Observer { task ->
             activity_task_title.setText(task!!.taskName)
+            Log.d(TAG, "Value changed!")
+            listViewAdapter.notifyDataSetChanged()
         })
     }
 
@@ -118,8 +132,7 @@ class TaskActivity : AppCompatActivity() {
         // Set listener
         dateTimeDialogFragment.setOnButtonClickListener(object : SwitchDateTimeDialogFragment.OnButtonClickListener {
             override fun onPositiveButtonClick(date: Date) {
-                task.value!!.startDate = date.time
-                listViewAdapter.notifyDataSetChanged()
+                viewModel.setStartDate(date)
             }
 
             override fun onNegativeButtonClick(date: Date) {
@@ -133,31 +146,17 @@ class TaskActivity : AppCompatActivity() {
 
 
 
-    fun parseIntent(){
-        task = MutableLiveData()
 
-        val taskId = intent.getLongExtra(INTENT_ID, -1)
-        if(taskId > -1){
-            //Getting from DB
-            todoViewModel.getTodo(taskId){ dbTask ->
-                task.setValue(dbTask)
-            }
-        } else {
-            //Initialize with default values
-            val newTask = Task(taskName = "Is this freedom?", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, priority = Priority.MEDIUM.level)
-            task.setValue(newTask)
-        }
-    }
 
     companion object {
-        val TAG : String = TaskActivity::class.java.canonicalName;
+        val TAG : String = TaskActivity::class.java.canonicalName
         val INTENT_ID:String = "id"
 
     }
 
 }
 
-class ListViewAdapter(val activity: TaskActivity, var names:List<Int>, var icons:List<Int>, var task:LiveData<Task>): BaseAdapter() {
+class ListViewAdapter(val activity: TaskActivity, val viewModel: TaskActivityViewModel, var names:List<Int>, var icons:List<Int>): BaseAdapter() {
     val dateFormat:DateFormat = SimpleDateFormat.getDateTimeInstance()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -174,10 +173,10 @@ class ListViewAdapter(val activity: TaskActivity, var names:List<Int>, var icons
 
         tvName.text = activity.getString(getItem(position))
 
-        task.observe(activity, android.arch.lifecycle.Observer { task->
+        viewModel.getTask().observe(activity, android.arch.lifecycle.Observer { task->
             when(getItem(position)){
                 R.string.task_setting_start_time -> {
-                    val date = Date();
+                    val date = Date()
                     date.time = task?.startDate!!
                     val dateString = dateFormat.format(date)
                     tvValue.text = dateString
@@ -192,7 +191,14 @@ class ListViewAdapter(val activity: TaskActivity, var names:List<Int>, var icons
                 }
 
                 R.string.task_setting_priority -> {
-                    tvValue.text = task?.priority.toString()
+                    val prioString: String
+                    val stringRes = Priority.fromLevel(task?.priority!!)?.stringRes?:0
+                    if(stringRes!=0){
+                        prioString = activity.getString(stringRes)
+                    }else{
+                        prioString = "Undefinded"
+                    }
+                    tvValue.text = prioString
                 }
             }
         })

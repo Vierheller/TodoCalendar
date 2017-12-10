@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 /**
  * Created by Vierheller on 01.11.2017.
@@ -25,8 +26,13 @@ class TodoRepository(){
     }
 
 
-    fun getTodo(id:Long):Task{
-        return TodoCalendarApplication.database.todoDao().getTodo(id)
+    fun getTodo(id:Long, listener:(Task)->Unit){
+        doAsync {
+            val task = TodoCalendarApplication.database.todoDao().getTodo(id)
+            uiThread {
+                listener.invoke(task)
+            }
+        }
     }
 
     fun getTodos():List<Task>{

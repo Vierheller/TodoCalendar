@@ -38,12 +38,7 @@ class TodoViewModel : ViewModel(){
     }
 
     fun getTodo(id:Long, listener:((Task) -> Unit)) {
-        doAsync {
-            val task = todoRepo.getTodo(id);
-            uiThread {
-                listener.invoke(task)
-            }
-        }
+        todoRepo.getTodo(id, listener)
     }
 
     fun getTasks():LiveData<List<Task>>{
@@ -58,7 +53,7 @@ class TodoViewModel : ViewModel(){
         tasks = todoRepo.getTodosLive()
     }
 
-    public interface OnTasksUpdatedListener{
+    interface OnTasksUpdatedListener{
         fun onWeekViewTasksUpdated() : ()->Unit
     }
 }
