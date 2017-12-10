@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,9 +25,14 @@ import kotlinx.android.synthetic.main.content_task.*
 import org.jetbrains.anko.find
 import org.jetbrains.anko.image
 import java.util.*
+import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
 
 class TaskActivity : AppCompatActivity() {
     private lateinit var todoViewModel : TodoViewModel
+    private lateinit var listViewAdapter:ListViewAdapter
 
     lateinit var task: MutableLiveData<Task>
 
@@ -50,16 +56,13 @@ class TaskActivity : AppCompatActivity() {
         val imageResArray  = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_images))
         val nameResArray   = getListFromResourceArray(resources.obtainTypedArray(R.array.task_settings_name))
 
-        settings_list_view.adapter = ListViewAdapter(this, nameResArray, imageResArray, task)
+        listViewAdapter = ListViewAdapter(this, nameResArray, imageResArray, task)
+        settings_list_view.adapter = listViewAdapter
+
         settings_list_view.setOnItemClickListener{ adapterView: AdapterView<*>, view: View, pos: Int, id: Long ->
             when(nameResArray[pos]){
                 R.string.task_setting_start_time -> {
-                    val calendar = Calendar.getInstance()
-                    val listener = DatePickerDialog.OnDateSetListener{ datePicker: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-
-                    }
-                    val dialog = DatePickerDialog(this, listener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
-                    dialog.show();
+                    initializeDateTimePicker()
                 }
 
                 R.string.task_setting_duration -> {
@@ -73,8 +76,6 @@ class TaskActivity : AppCompatActivity() {
             }
         }
 
-
-
         activity_task_title.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(text: Editable?) {
                 task.value!!.taskName = text.toString()
@@ -87,9 +88,47 @@ class TaskActivity : AppCompatActivity() {
             }
 
         })
+
         task.observe(this, android.arch.lifecycle.Observer { task ->
             activity_task_title.setText(task!!.taskName)
         })
+    }
+
+
+    fun initializeDateTimePicker(){
+        // Initialize
+        val dateTimeDialogFragment = SwitchDateTimeDialogFragment.newInstance(
+                "Title example",
+                "OK",
+                "Cancel"
+        )
+
+        // Assign values
+        dateTimeDialogFragment.startAtCalendarView()
+        dateTimeDialogFragment.set24HoursMode(true)
+
+        // Define new day and month format
+        try {
+            dateTimeDialogFragment.setSimpleDateMonthAndDayFormat(SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()))
+        } catch (e: SwitchDateTimeDialogFragment.SimpleDateMonthAndDayFormatException) {
+            Log.e(TaskActivity.TAG, e.message)
+        }
+
+
+        // Set listener
+        dateTimeDialogFragment.setOnButtonClickListener(object : SwitchDateTimeDialogFragment.OnButtonClickListener {
+            override fun onPositiveButtonClick(date: Date) {
+                task.value!!.startDate = date.time
+                listViewAdapter.notifyDataSetChanged()
+            }
+
+            override fun onNegativeButtonClick(date: Date) {
+                // Date is get on negative button click
+            }
+        })
+
+        // Show
+        dateTimeDialogFragment.show(supportFragmentManager, "dialog_time")
     }
 
 
@@ -111,12 +150,16 @@ class TaskActivity : AppCompatActivity() {
     }
 
     companion object {
+        val TAG : String = TaskActivity::class.java.canonicalName;
         val INTENT_ID:String = "id"
+
     }
 
 }
 
 class ListViewAdapter(val activity: TaskActivity, var names:List<Int>, var icons:List<Int>, var task:LiveData<Task>): BaseAdapter() {
+    val dateFormat:DateFormat = SimpleDateFormat.getDateTimeInstance()
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val inflater = LayoutInflater.from(activity)
 
@@ -134,7 +177,10 @@ class ListViewAdapter(val activity: TaskActivity, var names:List<Int>, var icons
         task.observe(activity, android.arch.lifecycle.Observer { task->
             when(getItem(position)){
                 R.string.task_setting_start_time -> {
-                    tvValue.text = task?.startDate.toString()
+                    val date = Date();
+                    date.time = task?.startDate!!
+                    val dateString = dateFormat.format(date)
+                    tvValue.text = dateString
                 }
 
                 R.string.task_setting_duration -> {
