@@ -65,24 +65,24 @@ class TaskActivity : AppCompatActivity() {
                 }
 
                 R.string.task_setting_duration -> {
-                    val numberDialogDuration = MyNumberPickerDialog()
+                    val numberDialogDuration = MyNumberPickerDialog.newInstance(R.string.task_setting_duration,
+                            0,
+                            30,
+                            viewModel.getTask().value?.durationMin!!)
                     numberDialogDuration.setOnValueChangedListener { new ->
                         viewModel.setDuration(new)
                     }
-                    viewModel.getTask().observe(this, android.arch.lifecycle.Observer { task ->
-                        numberDialogDuration.setValue(task!!.durationMin)
-                    })
                     numberDialogDuration.show(supportFragmentManager, "DurationDialog")
                 }
 
                 R.string.task_setting_buffer -> {
-                    val numberDialogBuffer = MyNumberPickerDialog()
+                    val numberDialogBuffer = MyNumberPickerDialog.newInstance(R.string.task_setting_buffer,
+                            0,
+                            100,
+                            viewModel.getTask().value?.bufferTime!!)
                     numberDialogBuffer.setOnValueChangedListener { new ->
                         viewModel.setBuffer(new)
                     }
-                    viewModel.getTask().observe(this, android.arch.lifecycle.Observer { task ->
-                        numberDialogBuffer.setValue(task!!.bufferTime)
-                    })
                     numberDialogBuffer.show(supportFragmentManager, "DurationDialog")
                 }
 

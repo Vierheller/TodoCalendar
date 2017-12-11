@@ -48,36 +48,42 @@ class TaskActivityViewModel : ViewModel(){
     }
 
     fun setStartDate(date: Date) {
-        apply { task ->
+        task.apply { task ->
             task.startDate = date.time
         }
     }
 
     fun setTaskName(text: String) {
         if(task.value!!.taskName != text)
-            apply { task ->
+            task.apply { task ->
                 task.taskName = text
             }
     }
 
     fun setPriorityFromIndex(index: Int) {
-        apply { task ->
+        task.apply { task ->
             val selectedPrio = Priority.values()[index]
             task.priority = selectedPrio.level
         }
     }
 
-    fun apply(job:(Task)->Unit){
-        val oldValue = task.value!!
-        job.invoke(oldValue)
-        task.value = oldValue
-    }
+
 
     fun setDuration(new: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        task.apply { task ->
+            task.durationMin = new
+        }
     }
 
     fun setBuffer(new: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        task.apply { task ->
+            task.bufferTime = new
+        }
     }
+}
+
+fun <T> MutableLiveData<T>.apply(job:(T)->Unit){
+    val oldValue = this.value!!
+    job.invoke(oldValue)
+    this.value = oldValue
 }
