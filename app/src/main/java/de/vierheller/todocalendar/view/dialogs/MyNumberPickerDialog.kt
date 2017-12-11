@@ -22,8 +22,8 @@ class MyNumberPickerDialog() : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = context.layoutInflater.inflate(R.layout.dialog_numberpicker, null)
         numberPicker = view.find<NumberPicker>(R.id.dialog_number_picker)
-        numberPicker.minValue = 0
-        numberPicker.maxValue = 100
+        numberPicker!!.minValue = 0
+        numberPicker!!.maxValue = 100
 
         val builder = AlertDialog.Builder(context)
         builder.setView(view)
