@@ -1,11 +1,7 @@
 package de.vierheller.todocalendar.view
 
 import android.app.AlertDialog
-import android.app.DatePickerDialog
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
-import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -16,20 +12,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.TextView
+import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.extensions.getListFromResourceArray
 import de.vierheller.todocalendar.model.todo.Priority
-import de.vierheller.todocalendar.viewmodel.TodoViewModel
+import de.vierheller.todocalendar.view.dialogs.MyNumberPickerDialog
+import de.vierheller.todocalendar.viewmodel.TaskActivityViewModel
 import kotlinx.android.synthetic.main.activity_task.*
 import kotlinx.android.synthetic.main.content_task.*
 import org.jetbrains.anko.find
 import org.jetbrains.anko.image
-import java.util.*
-import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
-import de.vierheller.todocalendar.viewmodel.TaskActivityViewModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.util.*
 
 
 class TaskActivity : AppCompatActivity() {
@@ -66,10 +65,25 @@ class TaskActivity : AppCompatActivity() {
                 }
 
                 R.string.task_setting_duration -> {
-
+                    val numberDialogDuration = MyNumberPickerDialog()
+                    numberDialogDuration.setOnValueChangedListener { new ->
+                        viewModel.setDuration(new)
+                    }
+                    viewModel.getTask().observe(this, android.arch.lifecycle.Observer { task ->
+                        numberDialogDuration.setValue(task!!.durationMin)
+                    })
+                    numberDialogDuration.show(supportFragmentManager, "DurationDialog")
                 }
 
                 R.string.task_setting_buffer -> {
+                    val numberDialogBuffer = MyNumberPickerDialog()
+                    numberDialogBuffer.setOnValueChangedListener { new ->
+                        viewModel.setBuffer(new)
+                    }
+                    viewModel.getTask().observe(this, android.arch.lifecycle.Observer { task ->
+                        numberDialogBuffer.setValue(task!!.bufferTime)
+                    })
+                    numberDialogBuffer.show(supportFragmentManager, "DurationDialog")
                 }
 
                 R.string.task_setting_priority -> {

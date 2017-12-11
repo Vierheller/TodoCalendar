@@ -72,4 +72,12 @@ class TaskActivityViewModel : ViewModel(){
         job.invoke(oldValue)
         task.value = oldValue
     }
+
+    fun setDuration(new: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun setBuffer(new: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }
