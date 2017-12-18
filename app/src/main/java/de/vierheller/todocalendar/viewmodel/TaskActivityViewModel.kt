@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
 import de.vierheller.todocalendar.TodoCalendarApplication
+import de.vierheller.todocalendar.extensions.apply
 import de.vierheller.todocalendar.model.todo.Priority
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.repository.TodoRepository
@@ -82,9 +83,4 @@ class TaskActivityViewModel : ViewModel(){
     }
 }
 
-fun <T> MutableLiveData<T>.apply(job:(T)->Unit){
-    val oldValue = this.value
-    if(oldValue!=null)
-        job.invoke(oldValue)
-    this.value = oldValue
-}
+

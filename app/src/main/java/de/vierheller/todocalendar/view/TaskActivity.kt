@@ -118,7 +118,8 @@ class TaskActivity : AppCompatActivity() {
 
         })
 
-
+        //Add this observer once to initialize the textview with tasks name
+        //Remove it afterwards since the value will always be up to date
         this.observer = android.arch.lifecycle.Observer<Task> { task ->
             activity_task_title.setText(task!!.taskName)
             viewModel.getTask().removeObserver(this.observer)
