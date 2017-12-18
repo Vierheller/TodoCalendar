@@ -68,8 +68,6 @@ class TaskActivityViewModel : ViewModel(){
         }
     }
 
-
-
     fun setDuration(new: Int) {
         task.apply { task ->
             task.durationMin = new

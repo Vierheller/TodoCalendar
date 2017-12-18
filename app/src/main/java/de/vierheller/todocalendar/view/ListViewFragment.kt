@@ -13,8 +13,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
+import de.vierheller.todocalendar.view.extra.SimpleDividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_list.*
 import org.jetbrains.anko.find
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -50,6 +54,7 @@ class ListViewFragment : Fragment() {
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.isAutoMeasureEnabled = false
         recyclerList.layoutManager = layoutManager
+        recyclerList.addItemDecoration(SimpleDividerItemDecoration(activity))
 
 
         adapter = RecyclerTaskListAdapter(null)
@@ -100,8 +105,10 @@ class ListViewFragment : Fragment() {
     }
 
     companion object {
+        val dateFormat:DateFormat  = DateFormat.getDateInstance()
 
         fun newInstance(): ListViewFragment {
+
            return ListViewFragment()
         }
     }
@@ -129,9 +136,10 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
             listener?.invoke(masterView)
         }
 
-        val title = masterView.find<TextView>(R.id.item_list_task_title)
+        val title   = masterView.find<TextView>(R.id.item_list_task_title)
+        val date    = masterView.find<TextView>(R.id.item_list_task_time_start)
 
-        return TaskViewHolder(masterView, title)
+        return TaskViewHolder(masterView, title, date)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
@@ -139,6 +147,7 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
 
         val curHolder = holder as TaskViewHolder
         curHolder.title.text = task.taskName
+        curHolder.date.text = ListViewFragment.dateFormat.format(Date(task.startDate))
     }
 
     override fun getItemId(position: Int): Long {
@@ -152,6 +161,4 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
 
 }
 
-class TaskViewHolder(itemView: View?, val title:TextView) : RecyclerView.ViewHolder(itemView) {
-
-}
+class TaskViewHolder(itemView: View?, val title: TextView, val date: TextView) : RecyclerView.ViewHolder(itemView)

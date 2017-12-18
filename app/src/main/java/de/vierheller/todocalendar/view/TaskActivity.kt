@@ -169,10 +169,6 @@ class TaskActivity : AppCompatActivity() {
         dateTimeDialogFragment.show(supportFragmentManager, "dialog_time")
     }
 
-
-
-
-
     companion object {
         val TAG : String = TaskActivity::class.java.canonicalName
         val INTENT_ID:String = "id"
