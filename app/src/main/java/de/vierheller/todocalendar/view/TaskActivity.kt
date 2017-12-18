@@ -115,9 +115,11 @@ class TaskActivity : AppCompatActivity() {
 
         })
 
+        activity_task_title.setText(viewModel.getTask().value?.taskName)
+
+        //Once the value was changed, the ListView has to be updated.
+        //Otherwise changes would not be displayed
         viewModel.getTask().observe(this, android.arch.lifecycle.Observer { task ->
-            activity_task_title.setText(task!!.taskName)
-            Log.d(TAG, "Value changed!")
             listViewAdapter.notifyDataSetChanged()
         })
     }
