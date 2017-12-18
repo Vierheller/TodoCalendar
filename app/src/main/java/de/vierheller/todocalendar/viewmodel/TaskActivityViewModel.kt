@@ -54,7 +54,7 @@ class TaskActivityViewModel : ViewModel(){
     }
 
     fun setTaskName(text: String) {
-        if(task.value!!.taskName != text)
+        if(task.value?.taskName != text)
             task.apply { task ->
                 task.taskName = text
             }
@@ -83,7 +83,8 @@ class TaskActivityViewModel : ViewModel(){
 }
 
 fun <T> MutableLiveData<T>.apply(job:(T)->Unit){
-    val oldValue = this.value!!
-    job.invoke(oldValue)
+    val oldValue = this.value
+    if(oldValue!=null)
+        job.invoke(oldValue)
     this.value = oldValue
 }

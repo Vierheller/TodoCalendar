@@ -35,11 +35,11 @@ class MyNumberPickerDialog : DialogFragment() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(titleResource)
         builder.setView(view)
-        builder.setPositiveButton(R.string.positive_button_dialog){ dialogInterface: DialogInterface, i: Int ->
+        builder.setPositiveButton(R.string.dialog_accept){ dialogInterface: DialogInterface, i: Int ->
             val newNumber = numberPicker!!.value
             listener?.invoke(newNumber)
         }
-        builder.setNegativeButton(R.string.negative_button_dialog){ dialogInterface: DialogInterface, i: Int ->
+        builder.setNegativeButton(R.string.dialog_cancel){ dialogInterface: DialogInterface, i: Int ->
             //Nothing to do
         }
 

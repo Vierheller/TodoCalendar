@@ -1,6 +1,7 @@
 package de.vierheller.todocalendar.view
 
 import android.app.AlertDialog
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +21,7 @@ import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.extensions.getListFromResourceArray
 import de.vierheller.todocalendar.model.todo.Priority
+import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.view.dialogs.MyNumberPickerDialog
 import de.vierheller.todocalendar.viewmodel.TaskActivityViewModel
 import kotlinx.android.synthetic.main.activity_task.*
@@ -34,6 +36,7 @@ import java.util.*
 class TaskActivity : AppCompatActivity() {
     private lateinit var listViewAdapter:ListViewAdapter
     private lateinit var viewModel : TaskActivityViewModel
+    private lateinit var observer: Observer<Task>
 
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -115,7 +118,12 @@ class TaskActivity : AppCompatActivity() {
 
         })
 
-        activity_task_title.setText(viewModel.getTask().value?.taskName)
+
+        this.observer = android.arch.lifecycle.Observer<Task> { task ->
+            activity_task_title.setText(task!!.taskName)
+            viewModel.getTask().removeObserver(this.observer)
+        }
+        viewModel.getTask().observe(this,observer)
 
         //Once the value was changed, the ListView has to be updated.
         //Otherwise changes would not be displayed
@@ -190,6 +198,7 @@ class ListViewAdapter(val activity: TaskActivity, val viewModel: TaskActivityVie
         tvName.text = activity.getString(getItem(position))
 
         viewModel.getTask().observe(activity, android.arch.lifecycle.Observer { task->
+            Log.d("observing", task?.taskName?:"Is null")
             when(getItem(position)){
                 R.string.task_setting_start_time -> {
                     val date = Date()

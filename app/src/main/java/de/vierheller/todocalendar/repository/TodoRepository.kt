@@ -1,6 +1,7 @@
 package de.vierheller.todocalendar.repository
 
 import android.arch.lifecycle.LiveData
+import android.util.Log
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
 import org.jetbrains.anko.doAsync
@@ -30,6 +31,7 @@ class TodoRepository(){
         doAsync {
             val task = TodoCalendarApplication.database.todoDao().getTodo(id)
             uiThread {
+                Log.d("Ui Again", task.toString())
                 listener.invoke(task)
             }
         }
