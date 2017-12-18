@@ -105,7 +105,8 @@ class ListViewFragment : Fragment() {
     }
 
     companion object {
-        val dateFormat:DateFormat  = DateFormat.getDateInstance()
+        val dateFormat:DateFormat = DateFormat.getDateInstance()
+        val timeFormat:DateFormat = DateFormat.getTimeInstance()
 
         fun newInstance(): ListViewFragment {
 
@@ -138,8 +139,9 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
 
         val title   = masterView.find<TextView>(R.id.item_list_task_title)
         val date    = masterView.find<TextView>(R.id.item_list_task_time_start)
+        val time    = masterView.find<TextView>(R.id.item_list_task_time_hour)
 
-        return TaskViewHolder(masterView, title, date)
+        return TaskViewHolder(masterView, title, date, time)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
@@ -148,6 +150,7 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
         val curHolder = holder as TaskViewHolder
         curHolder.title.text = task.taskName
         curHolder.date.text = ListViewFragment.dateFormat.format(Date(task.startDate))
+        curHolder.time.text = ListViewFragment.timeFormat.format(Date(task.startDate))
     }
 
     override fun getItemId(position: Int): Long {
@@ -161,4 +164,4 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
 
 }
 
-class TaskViewHolder(itemView: View?, val title: TextView, val date: TextView) : RecyclerView.ViewHolder(itemView)
+class TaskViewHolder(itemView: View?, val title: TextView, val date: TextView, val time:TextView) : RecyclerView.ViewHolder(itemView)

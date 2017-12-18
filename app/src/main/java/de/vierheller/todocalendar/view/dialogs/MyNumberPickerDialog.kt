@@ -40,7 +40,7 @@ class MyNumberPickerDialog : DialogFragment() {
             listener?.invoke(newNumber)
         }
         builder.setNegativeButton(R.string.dialog_cancel){ dialogInterface: DialogInterface, i: Int ->
-            //Nothing to do
+
         }
 
         return builder.create()

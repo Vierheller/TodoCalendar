@@ -5,11 +5,13 @@
         <item>@string/task_setting_duration</item>
         <item>@string/task_setting_buffer</item>
         <item>@string/task_setting_priority</item>
+        <item>@string/task_setting_note</item>
     </integer-array>
     <integer-array name="task_settings_images">
         <item>@drawable/ic_menu_camera</item>
         <item>@drawable/ic_menu_manage</item>
         <item>@drawable/ic_menu_gallery</item>
+        <item>@drawable/ic_menu_manage</item>
         <item>@drawable/ic_menu_manage</item>
     </integer-array>
 

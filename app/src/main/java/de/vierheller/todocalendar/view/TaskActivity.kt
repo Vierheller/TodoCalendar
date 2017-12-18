@@ -22,6 +22,7 @@ import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.extensions.getListFromResourceArray
 import de.vierheller.todocalendar.model.todo.Priority
 import de.vierheller.todocalendar.model.todo.Task
+import de.vierheller.todocalendar.view.dialogs.MyNoteWriterDialog
 import de.vierheller.todocalendar.view.dialogs.MyNumberPickerDialog
 import de.vierheller.todocalendar.viewmodel.TaskActivityViewModel
 import kotlinx.android.synthetic.main.activity_task.*
@@ -86,7 +87,7 @@ class TaskActivity : AppCompatActivity() {
                     numberDialogBuffer.setOnValueChangedListener { new ->
                         viewModel.setBuffer(new)
                     }
-                    numberDialogBuffer.show(supportFragmentManager, "DurationDialog")
+                    numberDialogBuffer.show(supportFragmentManager, "BufferDialog")
                 }
 
                 R.string.task_setting_priority -> {
@@ -100,6 +101,15 @@ class TaskActivity : AppCompatActivity() {
                         )
                     val dialog = builder.create()
                     dialog.show()
+                }
+
+                R.string.task_setting_note ->{
+                    val noteDialog = MyNoteWriterDialog.newInstance(R.string.task_setting_note,
+                            viewModel.getTask().value?.note!!)
+                    noteDialog.setListener { new ->
+                        viewModel.setNote(new)
+                    }
+                    noteDialog.show(supportFragmentManager, "NoteDialog")
                 }
             }
         }

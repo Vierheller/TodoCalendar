@@ -26,4 +26,5 @@
     <string name="priority_low">Low</string>
     <string name="priority_medium">Medium</string>
     <string name="priority_high">High</string>
+    <string name="task_setting_note">Note</string>
 </resources>

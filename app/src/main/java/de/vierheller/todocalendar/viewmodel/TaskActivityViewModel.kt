@@ -79,6 +79,12 @@ class TaskActivityViewModel : ViewModel(){
             task.bufferTime = new
         }
     }
+
+    fun setNote(new: String) {
+        task.apply { task ->
+            task.note = new
+        }
+    }
 }
 
 
