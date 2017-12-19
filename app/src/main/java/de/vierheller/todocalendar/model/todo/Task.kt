@@ -17,7 +17,16 @@ class Task(@PrimaryKey(autoGenerate = true)
            var bufferTime: Int = 0,
            var priority: Int,
            var note:String = "",
-           var finished:Boolean = false){
+           var finished:Boolean = false):Filterable{
+
+    override fun filter(filer: TaskFilter):Boolean {
+        return when(filer){
+            TaskFilter.ALL -> true
+            TaskFilter.UNFINISHED -> !this.finished
+            TaskFilter.FINISHED -> this.finished
+        }
+
+    }
 
     override fun toString(): String {
         return "Task(uid=$uid, parent_todo_id=$parent_todo_id, name='$taskName', duration_min=$durationMin, buffer_time=$bufferTime, priority=$priority, note='$note', finished='$finished')"

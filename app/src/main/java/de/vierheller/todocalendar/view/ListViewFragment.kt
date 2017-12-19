@@ -1,6 +1,7 @@
 package de.vierheller.todocalendar.view
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -22,6 +23,8 @@ import java.text.DateFormat
 import java.util.*
 import android.support.v7.widget.helper.ItemTouchHelper
 import de.vierheller.todocalendar.view.extra.RecyclerItemTouchHelper
+import de.vierheller.todocalendar.model.todo.TaskFilter
+import de.vierheller.todocalendar.viewmodel.ListViewFragmentViewModel
 
 
 /**
@@ -36,10 +39,14 @@ class ListViewFragment : Fragment() {
     private var mListener: OnFragmentInteractionListener? = null
     lateinit var mActivity:MainActivity
     lateinit var adapter:RecyclerTaskListAdapter
+    lateinit var viewModel:ListViewFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mActivity = activity as MainActivity
 
+        viewModel = ViewModelProviders.of(this).get(ListViewFragmentViewModel::class.java)
+        viewModel.init(mActivity.todoViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -51,7 +58,6 @@ class ListViewFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mActivity = activity as MainActivity
 
         recyclerList.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
@@ -62,7 +68,7 @@ class ListViewFragment : Fragment() {
 
 
         val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT){ viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int ->
-            if(mActivity.todoViewModel.finishTask(position)){
+            if(viewModel.finishTask(position)){
                 Snackbar.make(getView()!!, "Finished!", Snackbar.LENGTH_LONG).show()
             }
         }
@@ -79,7 +85,7 @@ class ListViewFragment : Fragment() {
         recyclerList.adapter = adapter
 
 
-        (activity as MainActivity).todoViewModel.getTasks()
+        viewModel.getTasks(TaskFilter.UNFINISHED)
                 .observe(this, Observer<List<Task>> { tasks ->
                     Log.d("ListViewFragment", "${tasks?.size.toString()} available ")
                     adapter.items = tasks

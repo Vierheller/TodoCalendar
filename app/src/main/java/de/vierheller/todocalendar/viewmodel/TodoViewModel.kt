@@ -1,14 +1,10 @@
 package de.vierheller.todocalendar.viewmodel
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.*
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.repository.TodoRepository
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.text.FieldPosition
+import de.vierheller.todocalendar.model.todo.TaskFilter
 import javax.inject.Inject
 
 /**
@@ -19,32 +15,37 @@ class TodoViewModel : ViewModel(){
     @Inject
     lateinit var todoRepo : TodoRepository
 
-    private var tasks: LiveData<List<Task>>? = null
+    private var allTasks: LiveData<List<Task>>? = null
 
     init {
         TodoCalendarApplication.graph.inject(this)
     }
 
-    fun getTasks():LiveData<List<Task>>{
-        if(tasks==null){
-            tasks = MutableLiveData<List<Task>>()
-            loadTasks()
+    fun getTasks(filter: TaskFilter):LiveData<List<Task>>{
+        if(allTasks ==null){
+            allTasks = MediatorLiveData<List<Task>>()
+            loadTasks(filter)
         }
-        return tasks!!
+        return filterLiveData(filter)
     }
 
-    private fun loadTasks() {
-        tasks = todoRepo.getTodosLive()
+    private fun filterLiveData(filter:TaskFilter): MediatorLiveData<List<Task>> {
+        val filteredList = MediatorLiveData<List<Task>>()
+        filteredList.addSource(todoRepo.getTodosLive()){ sourceTasks ->
+            val list = sourceTasks!!.filter{
+                it.filter(filter)
+            }
+            filteredList.value = list
+        }
+        return filteredList
     }
 
-    fun finishTask(position: Int):Boolean{
-        val task = tasks?.value?.get(position)
-        if(task!=null) {
-            todoRepo.finishTask(task)
-            return true
-        }else{
-            return false
-        }
+    private fun loadTasks(filter: TaskFilter) {
+        allTasks = todoRepo.getTodosLive()
+    }
+
+    fun finishTask(task:Task){
+        todoRepo.finishTask(task)
     }
 
     interface OnTasksUpdatedListener{

@@ -15,11 +15,11 @@ import android.view.MenuItem
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
+import de.vierheller.todocalendar.model.todo.TaskFilter
 import de.vierheller.todocalendar.viewmodel.TodoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
 import org.jetbrains.anko.intentFor
-import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DayViewFragment.OnDayViewFragmentInteractionListener, ListViewFragment.OnFragmentInteractionListener {
     lateinit var todoViewModel : TodoViewModel
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel::class.java)
 
-        todoViewModel.getTasks().observe(this, Observer {
+        todoViewModel.getTasks(TaskFilter.ALL).observe(this, Observer {
             Log.d("TAG", "Data is null")
             if(it!=null) {
                 Log.d("TAG", "Length = " + it.size)

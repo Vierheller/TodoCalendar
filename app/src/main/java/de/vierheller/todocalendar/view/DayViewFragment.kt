@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
+import de.vierheller.todocalendar.model.todo.TaskFilter
 
 
 /**
@@ -37,7 +38,7 @@ class DayViewFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainActivity.todoViewModel.getTasks()
+        mainActivity.todoViewModel.getTasks(TaskFilter.ALL)
                 .observe(this, Observer<List<Task>> {tasks ->
 
                 })
