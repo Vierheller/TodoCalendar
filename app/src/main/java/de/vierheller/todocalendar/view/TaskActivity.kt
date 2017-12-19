@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -231,6 +232,16 @@ class ListViewAdapter(val activity: TaskActivity, val viewModel: TaskActivityVie
                         prioString = "Undefinded"
                     }
                     tvValue.text = prioString
+                }
+                R.string.task_setting_note->{
+                    val note = task?.note
+                    if(!note.isNullOrEmpty()){
+                        tvValue.text = "\"${task?.note}\""
+                        tvValue.maxLines = 1
+                        tvValue.ellipsize = TextUtils.TruncateAt.END
+                    }else{
+                        tvValue.text = activity.getString(R.string.task_setting_note_placeholder)
+                    }
                 }
             }
         })
