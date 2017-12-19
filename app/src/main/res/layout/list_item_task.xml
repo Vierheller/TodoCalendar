@@ -10,9 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_task_height" />
 
-    <include
+    <FrameLayout
         android:id="@+id/list_item_foreground"
-        layout="@layout/list_item_task_foreground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_task_height" />
+        android:layout_height="match_parent"
+        android:background="@android:color/background_light">
+
+        <include
+            layout="@layout/list_item_task_foreground"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_task_height" />
+    </FrameLayout>
+
 </FrameLayout>

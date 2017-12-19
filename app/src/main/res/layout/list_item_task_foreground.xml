@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_task_height"
-    android:background="@android:color/background_light"
+    android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:id="@+id/list_item_foreground_holder">
 
     <TextView
         android:id="@+id/item_list_task_title"

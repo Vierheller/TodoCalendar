@@ -150,8 +150,8 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
         val time    = masterView.find<TextView>(R.id.item_list_task_time_hour)
         val viewForeground = masterView.find<View>(R.id.list_item_foreground)
         val viewBackground = masterView.find<View>(R.id.list_item_background)
-
-        viewForeground.setOnClickListener{
+        val viewForegroundHolder = masterView.find<View>(R.id.list_item_foreground_holder)
+        viewForegroundHolder.setOnClickListener{
             listener?.invoke(masterView)
         }
 
