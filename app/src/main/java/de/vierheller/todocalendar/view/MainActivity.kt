@@ -1,6 +1,5 @@
 package de.vierheller.todocalendar.view
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -15,7 +14,6 @@ import android.view.MenuItem
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
-import de.vierheller.todocalendar.model.todo.TaskFilter
 import de.vierheller.todocalendar.viewmodel.TodoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
@@ -38,16 +36,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel::class.java)
-
-        todoViewModel.getTasks(TaskFilter.ALL).observe(this, Observer {
-            Log.d("TAG", "Data is null")
-            if(it!=null) {
-                Log.d("TAG", "Length = " + it.size)
-                if (it.size > 0)
-                    Log.d("TAG", it.get(0).toString())
-
-            }
-        })
 
         fab.setOnClickListener { _ ->
             startTaskActivity(null)

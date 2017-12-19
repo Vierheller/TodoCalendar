@@ -1,10 +1,11 @@
 package de.vierheller.todocalendar.viewmodel
 
-import android.arch.lifecycle.*
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.repository.TodoRepository
-import de.vierheller.todocalendar.model.todo.TaskFilter
 import javax.inject.Inject
 
 /**
@@ -21,26 +22,15 @@ class TodoViewModel : ViewModel(){
         TodoCalendarApplication.graph.inject(this)
     }
 
-    fun getTasks(filter: TaskFilter):LiveData<List<Task>>{
-        if(allTasks ==null){
-            allTasks = MediatorLiveData<List<Task>>()
-            loadTasks(filter)
+    fun getTasks():LiveData<List<Task>>{
+        if(allTasks == null){
+            allTasks = MutableLiveData<List<Task>>()
+            loadTasks()
         }
-        return filterLiveData(filter)
+        return allTasks!!
     }
 
-    private fun filterLiveData(filter:TaskFilter): MediatorLiveData<List<Task>> {
-        val filteredList = MediatorLiveData<List<Task>>()
-        filteredList.addSource(todoRepo.getTodosLive()){ sourceTasks ->
-            val list = sourceTasks!!.filter{
-                it.filter(filter)
-            }
-            filteredList.value = list
-        }
-        return filteredList
-    }
-
-    private fun loadTasks(filter: TaskFilter) {
+    private fun loadTasks() {
         allTasks = todoRepo.getTodosLive()
     }
 

@@ -1,5 +1,6 @@
 package de.vierheller.todocalendar.view
 
+import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -9,22 +10,19 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.view.*
 import android.widget.TextView
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
+import de.vierheller.todocalendar.model.todo.TaskFilter
+import de.vierheller.todocalendar.view.extra.RecyclerItemTouchHelper
 import de.vierheller.todocalendar.view.extra.SimpleDividerItemDecoration
+import de.vierheller.todocalendar.viewmodel.ListViewFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
 import org.jetbrains.anko.find
 import java.text.DateFormat
 import java.util.*
-import android.support.v7.widget.helper.ItemTouchHelper
-import de.vierheller.todocalendar.view.extra.RecyclerItemTouchHelper
-import de.vierheller.todocalendar.model.todo.TaskFilter
-import de.vierheller.todocalendar.viewmodel.ListViewFragmentViewModel
 
 
 /**
@@ -44,15 +42,37 @@ class ListViewFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mActivity = activity as MainActivity
-
-        viewModel = ViewModelProviders.of(this).get(ListViewFragmentViewModel::class.java)
-        viewModel.init(mActivity.todoViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        viewModel = ViewModelProviders.of(this).get(ListViewFragmentViewModel::class.java)
+        viewModel.init(mActivity.todoViewModel)
+
+        setHasOptionsMenu(true)
+
         // Inflate the layout for this fragment
         return inflater!!.inflate(R.layout.fragment_list, container, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.fragment_list_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.action_filter->{
+                val builder = AlertDialog.Builder(activity)
+                builder.setTitle(R.string.menu_filter)
+                builder.setItems(TaskFilter.asStringArray(activity), {dialogInterface, i ->
+                    viewModel.setFilter(TaskFilter.values()[i])
+                })
+                builder.create().show()
+                return true
+            }
+        }
+        return false
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -84,7 +104,7 @@ class ListViewFragment : Fragment() {
         recyclerList.adapter = adapter
 
 
-        viewModel.getTasks(TaskFilter.UNFINISHED)
+        viewModel.getTasks()
                 .observe(this, Observer<List<Task>> { tasks ->
                     adapter.items = tasks
                     adapter.notifyDataSetChanged()
