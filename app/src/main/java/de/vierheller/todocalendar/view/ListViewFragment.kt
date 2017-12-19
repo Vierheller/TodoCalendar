@@ -3,7 +3,9 @@ package de.vierheller.todocalendar.view
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -17,8 +19,9 @@ import de.vierheller.todocalendar.view.extra.SimpleDividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_list.*
 import org.jetbrains.anko.find
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
+import android.support.v7.widget.helper.ItemTouchHelper
+import de.vierheller.todocalendar.view.extra.RecyclerItemTouchHelper
 
 
 /**
@@ -55,6 +58,13 @@ class ListViewFragment : Fragment() {
         layoutManager.isAutoMeasureEnabled = false
         recyclerList.layoutManager = layoutManager
         recyclerList.addItemDecoration(SimpleDividerItemDecoration(activity))
+        recyclerList.itemAnimator = DefaultItemAnimator()
+
+
+        val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT){ viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int ->
+            Snackbar.make(getView()!!, "Deleted!", Snackbar.LENGTH_LONG).show()
+        }
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerList)
 
 
         adapter = RecyclerTaskListAdapter(null)
@@ -133,15 +143,19 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
         masterView = LayoutInflater.from(parent!!.context)
                 .inflate(R.layout.list_item_task, parent, false)
 
-        masterView.setOnClickListener{
-            listener?.invoke(masterView)
-        }
+
 
         val title   = masterView.find<TextView>(R.id.item_list_task_title)
         val date    = masterView.find<TextView>(R.id.item_list_task_time_start)
         val time    = masterView.find<TextView>(R.id.item_list_task_time_hour)
+        val viewForeground = masterView.find<View>(R.id.list_item_foreground)
+        val viewBackground = masterView.find<View>(R.id.list_item_background)
 
-        return TaskViewHolder(masterView, title, date, time)
+        viewForeground.setOnClickListener{
+            listener?.invoke(masterView)
+        }
+
+        return TaskViewHolder(masterView, title, date, time, viewForeground, viewBackground)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
@@ -164,4 +178,4 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
 
 }
 
-class TaskViewHolder(itemView: View?, val title: TextView, val date: TextView, val time:TextView) : RecyclerView.ViewHolder(itemView)
+class TaskViewHolder(itemView: View?, val title: TextView, val date: TextView, val time:TextView, val viewForeground:View, val viewBackground:View) : RecyclerView.ViewHolder(itemView)
