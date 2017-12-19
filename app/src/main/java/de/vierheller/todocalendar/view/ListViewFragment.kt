@@ -69,7 +69,7 @@ class ListViewFragment : Fragment() {
 
         val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT){ viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int ->
             if(viewModel.finishTask(position)){
-                Snackbar.make(getView()!!, "Finished!", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(getView()!!, R.string.task_item_check, Snackbar.LENGTH_LONG).show()
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerList)
@@ -79,7 +79,6 @@ class ListViewFragment : Fragment() {
         adapter.setOnClickListener { v ->
             val pos = recyclerList.getChildLayoutPosition(v)
             val id = adapter.getItemId(pos)
-            Log.d("Tag", "Clicked Task id:"+id)
             mActivity.startTaskActivity(id)
         }
         recyclerList.adapter = adapter
@@ -87,7 +86,6 @@ class ListViewFragment : Fragment() {
 
         viewModel.getTasks(TaskFilter.UNFINISHED)
                 .observe(this, Observer<List<Task>> { tasks ->
-                    Log.d("ListViewFragment", "${tasks?.size.toString()} available ")
                     adapter.items = tasks
                     adapter.notifyDataSetChanged()
             })
