@@ -62,7 +62,9 @@ class ListViewFragment : Fragment() {
 
 
         val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT){ viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int ->
-            Snackbar.make(getView()!!, "Deleted!", Snackbar.LENGTH_LONG).show()
+            if(mActivity.todoViewModel.finishTask(position)){
+                Snackbar.make(getView()!!, "Finished!", Snackbar.LENGTH_LONG).show()
+            }
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerList)
 

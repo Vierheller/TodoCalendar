@@ -16,10 +16,11 @@ class Task(@PrimaryKey(autoGenerate = true)
            var durationMin: Int,
            var bufferTime: Int = 0,
            var priority: Int,
-           var note:String = ""){
+           var note:String = "",
+           var finished:Boolean = false){
 
     override fun toString(): String {
-        return "Task(uid=$uid, parent_todo_id=$parent_todo_id, name='$taskName', duration_min=$durationMin, buffer_time=$bufferTime, priority=$priority, note='$note')"
+        return "Task(uid=$uid, parent_todo_id=$parent_todo_id, name='$taskName', duration_min=$durationMin, buffer_time=$bufferTime, priority=$priority, note='$note', finished='$finished')"
     }
 
     fun getStartTime(): Calendar {

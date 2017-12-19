@@ -8,6 +8,7 @@ import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.repository.TodoRepository
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.text.FieldPosition
 import javax.inject.Inject
 
 /**
@@ -19,26 +20,9 @@ class TodoViewModel : ViewModel(){
     lateinit var todoRepo : TodoRepository
 
     private var tasks: LiveData<List<Task>>? = null
-    private var onTasksUpdatedObservers:MutableList<OnTasksUpdatedListener> = ArrayList()
 
     init {
         TodoCalendarApplication.graph.inject(this)
-    }
-
-    fun setOnTasksUpdatedListener(listener:OnTasksUpdatedListener){
-        onTasksUpdatedObservers.add(listener)
-    }
-
-    fun removeOnTasksUpdatedListener(listener:OnTasksUpdatedListener){
-        onTasksUpdatedObservers.remove(listener)
-    }
-
-    fun addTodo(entity: Task){
-        todoRepo.putTodo(entity)
-    }
-
-    fun getTodo(id:Long, listener:((Task) -> Unit)) {
-        todoRepo.getTodo(id, listener)
     }
 
     fun getTasks():LiveData<List<Task>>{
@@ -51,6 +35,16 @@ class TodoViewModel : ViewModel(){
 
     private fun loadTasks() {
         tasks = todoRepo.getTodosLive()
+    }
+
+    fun finishTask(position: Int):Boolean{
+        val task = tasks?.value?.get(position)
+        if(task!=null) {
+            todoRepo.finishTask(task)
+            return true
+        }else{
+            return false
+        }
     }
 
     interface OnTasksUpdatedListener{

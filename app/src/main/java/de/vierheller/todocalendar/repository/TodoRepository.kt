@@ -41,5 +41,12 @@ class TodoRepository(){
         return TodoCalendarApplication.database.todoDao().getAllTodos()
     }
 
+    fun finishTask(task: Task) {
+        task.finished = true
+        doAsync {
+            TodoCalendarApplication.database.todoDao().update(task)
+        }
+    }
+
 
 }
