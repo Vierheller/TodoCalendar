@@ -29,8 +29,9 @@
     <string name="task_setting_note">Note</string>
     <string name="task_setting_note_placeholder">Add note!</string>
     <string name="task_item_check">Finish</string>
-    <string name="menu_filter">Filter</string>
+    <string name="menu_filter">Filter for</string>
     <string name="task_filter_all">All</string>
     <string name="task_filter_unfinished">Unfinished</string>
     <string name="task_filter_finished">Finished</string>
+    <string name="task_filter_none">None</string>
 </resources>

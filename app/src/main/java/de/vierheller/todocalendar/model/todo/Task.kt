@@ -21,7 +21,7 @@ class Task(@PrimaryKey(autoGenerate = true)
 
     override fun filter(filer: TaskFilter):Boolean {
         return when(filer){
-            TaskFilter.ALL -> true
+            TaskFilter.NONE -> true
             TaskFilter.UNFINISHED -> !this.finished
             TaskFilter.FINISHED -> this.finished
         }

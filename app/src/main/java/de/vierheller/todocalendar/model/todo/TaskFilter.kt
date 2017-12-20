@@ -7,7 +7,7 @@ import de.vierheller.todocalendar.R
  * Created by Vierheller on 19.12.2017.
  */
 enum class TaskFilter(val stringRes:Int) {
-    ALL(R.string.task_filter_all),
+    NONE(R.string.task_filter_all),
     UNFINISHED(R.string.task_filter_unfinished),
     FINISHED(R.string.task_filter_finished);
     companion object {

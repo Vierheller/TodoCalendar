@@ -1,6 +1,5 @@
 package de.vierheller.todocalendar.view
 
-import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -62,13 +61,16 @@ class ListViewFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.action_filter->{
-                val builder = AlertDialog.Builder(activity)
-                builder.setTitle(R.string.menu_filter)
-                builder.setItems(TaskFilter.asStringArray(activity), {dialogInterface, i ->
-                    viewModel.setFilter(TaskFilter.values()[i])
-                })
-                builder.create().show()
+            R.id.action_filter_finished->{
+                viewModel.setFilter(TaskFilter.FINISHED)
+                return true
+            }
+            R.id.action_filter_unfinished->{
+                viewModel.setFilter(TaskFilter.UNFINISHED)
+                return true
+            }
+            R.id.action_filter_none->{
+                viewModel.setFilter(TaskFilter.NONE)
                 return true
             }
         }
