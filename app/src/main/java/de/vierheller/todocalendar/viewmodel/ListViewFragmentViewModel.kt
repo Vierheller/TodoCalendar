@@ -5,6 +5,7 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.ViewModel
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.model.todo.TaskFilter
+import de.vierheller.todocalendar.model.todo.TaskSorting
 
 /**
  * Created by Vierheller on 19.12.2017.
@@ -13,6 +14,7 @@ class ListViewFragmentViewModel: ViewModel() {
     lateinit var todoViewModel:TodoViewModel
     private var tasks: MediatorLiveData<List<Task>>? = null
     private var currentFilter: TaskFilter? = null
+    private var currentSorting: TaskSorting? = null
 
     fun init(todoViewModel: TodoViewModel){
         this.todoViewModel = todoViewModel
@@ -29,8 +31,26 @@ class ListViewFragmentViewModel: ViewModel() {
     private fun addTodoSource(){
         //Filtering the LiveData
         tasks!!.addSource(todoViewModel.getTasks()){ sourceTasks ->
-            val list = filterList(sourceTasks!!)
+            var list = filterList(sourceTasks!!)
+            list = sortList(list)
             tasks!!.value = list
+        }
+    }
+
+    private fun sortList(list: List<Task>): List<Task> {
+        when(currentSorting){
+            TaskSorting.DATE->{
+                return list.sortedBy { it.startDate }
+            }
+            TaskSorting.PRIORITY->{
+                return list.sortedBy { it.priority }
+            }
+            TaskSorting.NAME -> {
+                return list.sortedBy { it.taskName }
+            }
+            else->{
+                return list.sortedBy { it.startDate }
+            }
         }
     }
 
@@ -61,6 +81,11 @@ class ListViewFragmentViewModel: ViewModel() {
 
     fun setFilter(filter:TaskFilter) {
         currentFilter = filter
+        resetSources()
+    }
+
+    fun setSorting(sorting:TaskSorting){
+        currentSorting = sorting
         resetSources()
     }
 }

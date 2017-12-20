@@ -4,7 +4,7 @@
 
     <item
         android:icon="@drawable/ic_filter_list_24dp"
-        android:title="@string/menu_filter"
+        android:title="@string/action_filter"
         android:visible="true"
         app:showAsAction="never" >
         <menu>
@@ -17,6 +17,22 @@
             <item
                 android:id="@+id/action_filter_none"
                 android:title="@string/task_filter_none"/>
+        </menu>
+    </item>
+    <item
+        android:title="@string/action_sort"
+        android:visible="true"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/action_sort_date"
+                android:title="@string/task_sort_date"/>
+            <item
+                android:id="@+id/action_sort_prio"
+                android:title="@string/task_sort_prio"/>
+            <item
+                android:id="@+id/action_sort_name"
+                android:title="@string/task_sort_name"/>
         </menu>
     </item>
 
