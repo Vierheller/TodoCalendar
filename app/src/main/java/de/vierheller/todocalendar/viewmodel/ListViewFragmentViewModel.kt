@@ -3,6 +3,7 @@ package de.vierheller.todocalendar.viewmodel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.ViewModel
+import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.model.todo.TaskFilter
 import de.vierheller.todocalendar.model.todo.TaskSorting
@@ -87,5 +88,37 @@ class ListViewFragmentViewModel: ViewModel() {
     fun setSorting(sorting:TaskSorting){
         currentSorting = sorting
         resetSources()
+    }
+
+    fun menuItemSelected(item: Int): Boolean {
+        when(item){
+            //Filters
+            R.id.action_filter_finished->{
+                setFilter(TaskFilter.FINISHED)
+                return true
+            }
+            R.id.action_filter_unfinished->{
+                setFilter(TaskFilter.UNFINISHED)
+                return true
+            }
+            R.id.action_filter_none->{
+                setFilter(TaskFilter.NONE)
+                return true
+            }
+            //Sorting
+            R.id.action_sort_date->{
+                setSorting(TaskSorting.DATE)
+                return true
+            }
+            R.id.action_sort_prio->{
+                setSorting(TaskSorting.PRIORITY)
+                return true
+            }
+            R.id.action_sort_name->{
+                setSorting(TaskSorting.NAME)
+                return true
+            }
+        }
+        return false
     }
 }
