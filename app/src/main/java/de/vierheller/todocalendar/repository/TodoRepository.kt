@@ -48,5 +48,11 @@ class TodoRepository(){
         }
     }
 
+    fun removeTask(task: Task) {
+        doAsync {
+            TodoCalendarApplication.database.todoDao().delete(task)
+        }
+    }
+
 
 }

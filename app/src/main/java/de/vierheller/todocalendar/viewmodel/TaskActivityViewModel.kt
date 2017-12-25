@@ -22,13 +22,17 @@ class TaskActivityViewModel : ViewModel(){
 
     private var task: MutableLiveData<Task> = MutableLiveData()
 
+    //Variable to find out if the current Task is new or already SAVED in DB
+    private var isSaved:Boolean = false
+
     init {
         TodoCalendarApplication.graph.inject(this)
     }
 
     fun init(intent:Intent){
         val taskId = intent.getLongExtra(TaskActivity.INTENT_ID, -1)
-        if(taskId > -1){
+        isSaved = taskId > -1
+        if(isSaved){
             //Getting from DB
             todoRepo.getTodo(taskId){ task ->
                 this.task.value = task
@@ -42,6 +46,14 @@ class TaskActivityViewModel : ViewModel(){
 
     fun save() {
         todoRepo.putTodo(task.value!!)
+    }
+
+    fun deleteTask() {
+        todoRepo.removeTask(this.task.value!!)
+    }
+
+    fun isTaskSaved(): Boolean {
+        return isSaved
     }
 
     fun getTask():LiveData<Task>{

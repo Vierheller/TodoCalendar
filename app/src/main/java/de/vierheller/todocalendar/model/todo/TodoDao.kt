@@ -24,6 +24,9 @@ interface TodoDao {
     @Update
     fun update(todo:Task)
 
+    @Delete
+    fun delete(todo:Task)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(todoEntity: Task)
 }

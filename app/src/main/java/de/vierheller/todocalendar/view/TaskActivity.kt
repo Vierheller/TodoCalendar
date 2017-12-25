@@ -11,9 +11,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.ImageView
@@ -144,6 +142,24 @@ class TaskActivity : AppCompatActivity() {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val saved = viewModel.isTaskSaved()
+        if(saved){
+            menuInflater.inflate(R.menu.menu_task, menu)
+        }
+        return saved
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId){
+            R.id.action_task_delete->{
+                viewModel.deleteTask()
+                finish()
+                return true
+            }
+        }
+        return false
+    }
 
     fun initializeDateTimePicker(){
         // Initialize

@@ -38,4 +38,5 @@
     <string name="task_sort_prio">Priority</string>
     <string name="task_sort_name">Name</string>
     <string name="action_sort">Sort by</string>
+    <string name="action_delete">Delete</string>
 </resources>
