@@ -3,7 +3,7 @@ package de.vierheller.todocalendar.view.extra
 import android.graphics.Canvas
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import de.vierheller.todocalendar.view.main.TaskViewHolder
+import de.vierheller.todocalendar.view.main.list.TaskViewHolder
 
 /**
  * Created by Vierheller on 18.12.2017.
@@ -18,7 +18,9 @@ class RecyclerItemTouchHelper(dragDirs: Int,
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int) {
-        listener.invoke(viewHolder!!, direction, viewHolder.getAdapterPosition());
+        val holder = (viewHolder as TaskViewHolder)
+        if (!holder.swipeable)
+            listener.invoke(holder, direction, holder.getAdapterPosition());
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -30,8 +32,10 @@ class RecyclerItemTouchHelper(dragDirs: Int,
     }
 
     override fun onChildDrawOver(c: Canvas?, recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-        val foregroundView = (viewHolder as TaskViewHolder).viewForeground
-        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
+        val holder = (viewHolder as TaskViewHolder)
+        val foregroundView = holder.viewForeground
+        if (!holder.swipeable)
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
     }
 
     override fun clearView(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?) {
@@ -40,9 +44,10 @@ class RecyclerItemTouchHelper(dragDirs: Int,
     }
 
     override fun onChildDraw(c: Canvas?, recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-        val foregroundView = (viewHolder as TaskViewHolder).viewForeground
-        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
-                actionState, isCurrentlyActive);
+        val holder = (viewHolder as TaskViewHolder)
+        val foregroundView = holder.viewForeground
+        if (!holder.swipeable)
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
     }
 
 

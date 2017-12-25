@@ -1,4 +1,4 @@
-package de.vierheller.todocalendar.view.main
+package de.vierheller.todocalendar.view.main.list
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -15,6 +15,7 @@ import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.view.extra.RecyclerItemTouchHelper
 import de.vierheller.todocalendar.view.extra.SimpleDividerItemDecoration
+import de.vierheller.todocalendar.view.main.MainActivity
 import de.vierheller.todocalendar.viewmodel.ListViewFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.text.DateFormat

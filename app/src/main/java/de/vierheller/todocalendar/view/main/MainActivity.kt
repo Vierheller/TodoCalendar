@@ -15,6 +15,7 @@ import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.view.TaskActivity
+import de.vierheller.todocalendar.view.main.list.ListViewFragment
 import de.vierheller.todocalendar.viewmodel.TodoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main2.*

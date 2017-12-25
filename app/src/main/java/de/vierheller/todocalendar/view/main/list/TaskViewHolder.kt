@@ -1,4 +1,4 @@
-package de.vierheller.todocalendar.view.main
+package de.vierheller.todocalendar.view.main.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -10,4 +10,5 @@ class TaskViewHolder(
         val date: TextView,
         val time: TextView,
         val viewForeground: View,
-        val viewBackground: View) : RecyclerView.ViewHolder(itemView)
+        val viewBackground: View,
+        val swipeable:Boolean) : RecyclerView.ViewHolder(itemView)
