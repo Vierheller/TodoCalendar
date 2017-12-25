@@ -3,8 +3,7 @@ package de.vierheller.todocalendar.view.extra
 import android.graphics.Canvas
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.view.View
-import de.vierheller.todocalendar.view.TaskViewHolder
+import de.vierheller.todocalendar.view.main.TaskViewHolder
 
 /**
  * Created by Vierheller on 18.12.2017.

@@ -1,4 +1,4 @@
-package de.vierheller.todocalendar.view
+package de.vierheller.todocalendar.view.main
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -14,6 +14,7 @@ import android.view.MenuItem
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
+import de.vierheller.todocalendar.view.TaskActivity
 import de.vierheller.todocalendar.viewmodel.TodoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
@@ -22,8 +23,8 @@ import org.jetbrains.anko.intentFor
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DayViewFragment.OnDayViewFragmentInteractionListener, ListViewFragment.OnFragmentInteractionListener {
     lateinit var todoViewModel : TodoViewModel
 
-    val listViewFragment:ListViewFragment = ListViewFragment()
-    val dayViewFragment:DayViewFragment = DayViewFragment()
+    val listViewFragment: ListViewFragment = ListViewFragment()
+    val dayViewFragment: DayViewFragment = DayViewFragment()
     lateinit var currentFragment:Fragment
 
 

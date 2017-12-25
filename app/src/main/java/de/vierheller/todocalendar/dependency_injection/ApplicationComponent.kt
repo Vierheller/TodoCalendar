@@ -1,7 +1,7 @@
 package de.vierheller.todocalendar.dependency_injection
 
 import dagger.Component
-import de.vierheller.todocalendar.view.MainActivity
+import de.vierheller.todocalendar.view.main.MainActivity
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.viewmodel.TaskActivityViewModel
 import de.vierheller.todocalendar.viewmodel.TodoViewModel

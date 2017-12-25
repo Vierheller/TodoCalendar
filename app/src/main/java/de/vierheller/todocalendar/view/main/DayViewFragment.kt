@@ -1,4 +1,4 @@
-package de.vierheller.todocalendar.view
+package de.vierheller.todocalendar.view.main
 
 import android.arch.lifecycle.Observer
 import android.content.Context
@@ -21,7 +21,7 @@ import de.vierheller.todocalendar.model.todo.Task
  */
 class DayViewFragment : Fragment() {
     private var mListener: OnDayViewFragmentInteractionListener? = null
-    private lateinit var mainActivity:MainActivity
+    private lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
