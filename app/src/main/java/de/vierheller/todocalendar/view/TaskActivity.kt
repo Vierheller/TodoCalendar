@@ -150,6 +150,16 @@ class TaskActivity : AppCompatActivity() {
         return saved
     }
 
+    /**
+     * Overrules standard navBar Back-Button action
+     * Reason is that the default behaviour resets MainActivity's state.
+     * With the use of finish, MainActivity's UI will remain as is
+     */
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item!!.itemId){
             R.id.action_task_delete->{
