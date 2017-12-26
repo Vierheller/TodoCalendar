@@ -70,6 +70,9 @@ class RecyclerTaskListAdapter (var items:List<Task>?): RecyclerView.Adapter<Recy
         val task: Task = items!![position]
 
         val curHolder = holder as TaskViewHolder
+
+        curHolder.task = task
+
         curHolder.title.text = task.taskName
         curHolder.date.text = ListViewFragment.dateFormat.format(Date(task.startDate))
         curHolder.time.text = ListViewFragment.timeFormat.format(Date(task.startDate))

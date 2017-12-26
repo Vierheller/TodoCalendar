@@ -13,9 +13,10 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
-import de.vierheller.todocalendar.view.extra.RecyclerItemTouchHelper
-import de.vierheller.todocalendar.view.extra.SimpleDividerItemDecoration
+import de.vierheller.todocalendar.view.main.list.extra.RecyclerItemTouchHelper
+import de.vierheller.todocalendar.view.main.list.extra.SimpleDividerItemDecoration
 import de.vierheller.todocalendar.view.main.MainActivity
+import de.vierheller.todocalendar.view.main.list.extra.SimpleSectionedRecyclerViewAdapter
 import de.vierheller.todocalendar.viewmodel.ListViewFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.text.DateFormat
@@ -33,6 +34,8 @@ class ListViewFragment : Fragment() {
     private var mListener: OnFragmentInteractionListener? = null
     lateinit var mActivity: MainActivity
     lateinit var adapter: RecyclerTaskListAdapter
+    private lateinit var sectionAdapter: SimpleSectionedRecyclerViewAdapter
+
     lateinit var viewModel:ListViewFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +72,7 @@ class ListViewFragment : Fragment() {
         layoutManager.isAutoMeasureEnabled = false
         recyclerList.layoutManager = layoutManager
         recyclerList.addItemDecoration(SimpleDividerItemDecoration(activity))
+        recyclerList.setHasFixedSize(false)
         recyclerList.itemAnimator = DefaultItemAnimator()
 
 
@@ -82,16 +86,24 @@ class ListViewFragment : Fragment() {
 
         adapter = RecyclerTaskListAdapter(null)
         adapter.setOnClickListener { v ->
-            val pos = recyclerList.getChildLayoutPosition(v)
+            var pos = recyclerList.getChildLayoutPosition(v)
+            pos = sectionAdapter.sectionedPositionToPosition(pos)
             val id = adapter.getItemId(pos)
             mActivity.startTaskActivity(id)
         }
-        recyclerList.adapter = adapter
+
+        SimpleSectionedRecyclerViewAdapter.Section(0, "Prio 1")
+        val sectionList = listOf(SimpleSectionedRecyclerViewAdapter.Section(0, "Prio 1"))
+        sectionAdapter = SimpleSectionedRecyclerViewAdapter(activity, R.layout.section, R.id.section_text,adapter)
+        sectionAdapter.setSections(sectionList)
+        recyclerList.adapter = sectionAdapter
 
 
         viewModel.getTasks()
                 .observe(this, Observer<List<Task>> { tasks ->
                     adapter.items = tasks
+                    val sections = viewModel.getSectionsForCurrentSorting()
+                    sectionAdapter.setSections(sections)
                     adapter.notifyDataSetChanged()
             })
 

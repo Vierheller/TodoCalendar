@@ -4,9 +4,11 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.ViewModel
 import de.vierheller.todocalendar.R
+import de.vierheller.todocalendar.model.todo.Priority
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.model.todo.TaskFilter
 import de.vierheller.todocalendar.model.todo.TaskSorting
+import de.vierheller.todocalendar.view.main.list.extra.SimpleSectionedRecyclerViewAdapter
 
 /**
  * Created by Vierheller on 19.12.2017.
@@ -125,5 +127,39 @@ class ListViewFragmentViewModel: ViewModel() {
             }
         }
         return false
+    }
+
+    fun getSectionsForCurrentSorting(): List<SimpleSectionedRecyclerViewAdapter.Section> {
+        when(currentSorting){
+            TaskSorting.PRIORITY->{
+                val array = tasks!!.value!!
+                val sections = mutableListOf<SimpleSectionedRecyclerViewAdapter.Section>()
+                val priorities = Priority.values()
+                sections.add(SimpleSectionedRecyclerViewAdapter.Section(0, "Priority: \"${priorities[0].name}\""))
+
+                var lastHit = 0
+                for (i in 1..priorities.size-1){
+                    for (j in lastHit..array.size-1){
+                        if(array[j].priority != priorities[i-1].level){
+                            lastHit = j
+                            break
+                        }
+                    }
+                    sections.add(SimpleSectionedRecyclerViewAdapter.Section(lastHit, "Priority: \"${priorities[i].name}\""))
+                }
+
+
+                return sections
+            }
+            TaskSorting.DATE -> {
+                return listOf()
+            }
+            TaskSorting.NAME -> {
+                return listOf()
+            }
+            else ->{
+                return listOf()
+            }
+        }
     }
 }

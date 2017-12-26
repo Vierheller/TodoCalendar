@@ -1,4 +1,4 @@
-package de.vierheller.todocalendar.view.extra
+package de.vierheller.todocalendar.view.main.list.extra
 
 import android.graphics.Canvas
 import android.support.v7.widget.RecyclerView
