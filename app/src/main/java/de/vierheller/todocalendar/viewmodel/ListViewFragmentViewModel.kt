@@ -135,17 +135,22 @@ class ListViewFragmentViewModel: ViewModel() {
                 val array = tasks!!.value!!
                 val sections = mutableListOf<SimpleSectionedRecyclerViewAdapter.Section>()
                 val priorities = Priority.values()
-                sections.add(SimpleSectionedRecyclerViewAdapter.Section(0, "Priority: \"${priorities[0].name}\""))
 
-                var lastHit = 0
-                for (i in 1..priorities.size-1){
-                    for (j in lastHit..array.size-1){
-                        if(array[j].priority != priorities[i-1].level){
-                            lastHit = j
+                var lastIndex = 0
+                for (i in 0..priorities.size-1){
+                    for (j in lastIndex..array.size-1){
+                        val refPrio = priorities[i].level
+                        val taskPrio = array[j].priority
+                        if(refPrio <= taskPrio){
+                            sections.add(SimpleSectionedRecyclerViewAdapter.Section(j, "Priority: \"${priorities[i].name}\""))
+                            lastIndex = j
                             break
                         }
+                        if(j==array.size-1){
+                            sections.add(SimpleSectionedRecyclerViewAdapter.Section(j+1, "Priority: \"${priorities[i].name}\""))
+                            lastIndex = j
+                        }
                     }
-                    sections.add(SimpleSectionedRecyclerViewAdapter.Section(lastHit, "Priority: \"${priorities[i].name}\""))
                 }
 
 

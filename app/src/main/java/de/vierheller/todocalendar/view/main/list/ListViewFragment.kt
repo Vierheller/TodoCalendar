@@ -77,10 +77,12 @@ class ListViewFragment : Fragment() {
 
 
         val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT){ viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int ->
-            if(viewModel.finishTask(position)){
+            val pos = sectionAdapter.sectionedPositionToPosition(position)
+            if(viewModel.finishTask(pos)){
                 Snackbar.make(getView()!!, R.string.task_item_check, Snackbar.LENGTH_LONG).show()
             }
         }
+
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerList)
 
 
