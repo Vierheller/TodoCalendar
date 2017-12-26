@@ -22,11 +22,16 @@ class ListViewFragmentViewModel: ViewModel() {
     }
 
     fun getTasks(): LiveData<List<Task>> {
-        tasks = MediatorLiveData<List<Task>>()
-
-        addTodoSource();
+        if(tasks == null){
+            loadtasks()
+        }
 
         return tasks!!
+    }
+
+    fun loadtasks(){
+        tasks = MediatorLiveData<List<Task>>()
+        addTodoSource();
     }
 
     private fun addTodoSource(){

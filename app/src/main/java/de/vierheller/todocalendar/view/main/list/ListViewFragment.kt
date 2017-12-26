@@ -42,7 +42,7 @@ class ListViewFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        viewModel = ViewModelProviders.of(this).get(ListViewFragmentViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity).get(ListViewFragmentViewModel::class.java)
         viewModel.init(mActivity.todoViewModel)
 
         setHasOptionsMenu(true)
