@@ -50,8 +50,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        openFragment(listViewFragment)
-
         onRestoreInstanceState(savedInstanceState)
     }
 
@@ -89,15 +87,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+    override fun onSaveInstanceState(outState: Bundle?) {
         Log.d("TAG", "Save Called! ${currentFragment::class.java.canonicalName}")
 
         outState!!.putString(STATE_FRAGMENT, currentFragment::class.java.canonicalName)
-        super.onSaveInstanceState(outState, outPersistentState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        Log.d("TAG", "Restore Called!")
         val fragmentName = savedInstanceState?.getString(STATE_FRAGMENT)
         when(fragmentName){
             DayViewFragment::class.java.canonicalName ->{
@@ -108,6 +105,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 openFragment(listViewFragment)
             }
 
+            else->{
+                openFragment(listViewFragment)
+            }
         }
 
     }
