@@ -9,6 +9,7 @@ import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.model.todo.TaskFilter
 import de.vierheller.todocalendar.model.todo.TaskSorting
 import de.vierheller.todocalendar.view.main.list.extra.SimpleSectionedRecyclerViewAdapter
+import java.util.*
 
 /**
  * Created by Vierheller on 19.12.2017.
@@ -187,6 +188,75 @@ class ListViewFragmentViewModel: ViewModel() {
      *      future
      */
     private fun getSectionForDate(): List<SimpleSectionedRecyclerViewAdapter.Section> {
-        return listOf()
+        val array = tasks!!.value!!
+        val sections = mutableListOf<SimpleSectionedRecyclerViewAdapter.Section>()
+        val ranges = DateRangesCalculator.SectionDateRanges.values()
+
+        for(i in 0 until ranges.size){
+            val index = indexForRange(DateRangesCalculator.SectionDateRanges.values()[i], array)
+            if(index > -1){
+                sections.add(SimpleSectionedRecyclerViewAdapter.Section(index, "\"${ranges[i].name}\""))
+            }
+        }
+        return sections
     }
+
+    private fun indexForRange(range:DateRangesCalculator.SectionDateRanges, array:List<Task>):Int{
+        for(i in 0 until array.size){
+            if(range.calculator.calculate(array[i].getStartTime())){
+                return i
+            }
+        }
+        return -1
+    }
+
+    private class DateRangesCalculator(val calculator:(Calendar)->Boolean){
+        enum class SectionDateRanges(val calculator:DateRangesCalculator) {
+            LAST_YEAR(DateRangesCalculator(lastYearCalculator)),
+            LAST_SIX_MONTHS(DateRangesCalculator(lastSixMonthsCalculator)),
+            LAST_MONTH(DateRangesCalculator(lastSixMonthsCalculator)),
+            LAST_WEEK(DateRangesCalculator(lastSixMonthsCalculator)),
+            YESTERDAY(DateRangesCalculator(lastSixMonthsCalculator)),
+            TODAY(DateRangesCalculator(lastSixMonthsCalculator)),
+            TOMORROW(DateRangesCalculator(lastSixMonthsCalculator)),
+            NEXT_WEEK(DateRangesCalculator(lastSixMonthsCalculator)),
+            FUTURE(DateRangesCalculator(lastSixMonthsCalculator));
+        }
+
+
+        fun calculate(date:Calendar):Boolean = calculator.invoke(date)
+
+        companion object{
+            private val lastYearCalculator: (Calendar) -> Boolean = {
+                val comparator = Calendar.getInstance()
+                comparator.add(Calendar.YEAR, -1)
+                it dayIsBefore comparator
+            }
+
+            private val lastSixMonthsCalculator: (Calendar) -> Boolean = {
+                false
+            }
+
+            //TODO needs to be replaced with compare of days and not exact times
+            private infix fun Calendar.dayIsBefore(it: Calendar): Boolean {
+                return this.timeInMillis < it.timeInMillis
+            }
+
+            //TODO needs to be replaced with compare of days and not exact times
+            private infix fun Calendar.dayIsAfter(it: Calendar): Boolean {
+                return this.timeInMillis > it.timeInMillis
+            }
+
+            private fun Calendar.dayInBetween(before: Calendar, after:Calendar): Boolean {
+                return (this dayIsAfter before) && (this dayIsBefore after)
+            }
+        }
+    }
+
+
+
 }
+
+
+
+
