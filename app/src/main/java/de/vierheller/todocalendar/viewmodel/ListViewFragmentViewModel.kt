@@ -135,7 +135,7 @@ class ListViewFragmentViewModel: ViewModel() {
                 return getSelectionForPriority()
             }
             TaskSorting.DATE -> {
-                return listOf()
+                return getSectionForDate()
             }
             TaskSorting.NAME -> {
                 return listOf()
@@ -171,5 +171,22 @@ class ListViewFragmentViewModel: ViewModel() {
             }
         }
         return array.size - 1
+    }
+
+    /**
+     * Premise: Tasks sorted by Date
+     * Return: Sections like:
+     *      last Year
+     *      last 6 Months
+     *      last Month
+     *      last Week
+     *      yesterday
+     *      today
+     *      tomorrow
+     *      (next week)
+     *      future
+     */
+    private fun getSectionForDate(): List<SimpleSectionedRecyclerViewAdapter.Section> {
+        return listOf()
     }
 }
