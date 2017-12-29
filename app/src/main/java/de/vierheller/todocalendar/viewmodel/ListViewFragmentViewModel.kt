@@ -132,29 +132,7 @@ class ListViewFragmentViewModel: ViewModel() {
     fun getSectionsForCurrentSorting(): List<SimpleSectionedRecyclerViewAdapter.Section> {
         when(currentSorting){
             TaskSorting.PRIORITY->{
-                val array = tasks!!.value!!
-                val sections = mutableListOf<SimpleSectionedRecyclerViewAdapter.Section>()
-                val priorities = Priority.values()
-
-                var lastIndex = 0
-                for (i in 0..priorities.size-1){
-                    for (j in lastIndex..array.size-1){
-                        val refPrio = priorities[i].level
-                        val taskPrio = array[j].priority
-                        if(refPrio <= taskPrio){
-                            sections.add(SimpleSectionedRecyclerViewAdapter.Section(j, "Priority: \"${priorities[i].name}\""))
-                            lastIndex = j
-                            break
-                        }
-                        if(j==array.size-1){
-                            sections.add(SimpleSectionedRecyclerViewAdapter.Section(j+1, "Priority: \"${priorities[i].name}\""))
-                            lastIndex = j
-                        }
-                    }
-                }
-
-
-                return sections
+                return getSelectionForPriority()
             }
             TaskSorting.DATE -> {
                 return listOf()
@@ -166,5 +144,32 @@ class ListViewFragmentViewModel: ViewModel() {
                 return listOf()
             }
         }
+    }
+
+    private fun getSelectionForPriority(): List<SimpleSectionedRecyclerViewAdapter.Section> {
+        val array = tasks!!.value!!
+        val sections = mutableListOf<SimpleSectionedRecyclerViewAdapter.Section>()
+        val priorities = Priority.values()
+
+        for (i in 0 until priorities.size){
+            val index = findNextIndexForPrio(priorities[i], array)
+            sections.add(SimpleSectionedRecyclerViewAdapter.Section(index, "Priority: \"${priorities[i].name}\""))
+        }
+
+        return sections
+    }
+
+    /**
+     * Premise: Array been sorted by priorities
+     * Return: Index where a new section should be placed
+     */
+    private fun findNextIndexForPrio(searchedPrio:Priority, array:List<Task>):Int{
+        for (j in 0 until array.size){
+            val curPrio = array[j].priority
+            if(curPrio >= searchedPrio.level){
+                return j
+            }
+        }
+        return array.size - 1
     }
 }
