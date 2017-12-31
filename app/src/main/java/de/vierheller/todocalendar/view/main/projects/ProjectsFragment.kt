@@ -27,6 +27,7 @@ class ProjectsFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_projects, container, false) as FrameLayout
 
         val tView = AndroidTreeView(activity, createTree())
+        tView.setDefaultViewHolder(CustomProjectsViewHolder(activity).javaClass)
         view.addView(tView.view)
 
 
@@ -35,17 +36,17 @@ class ProjectsFragment : Fragment() {
 
     private fun createTree(): TreeNode {
         val root = TreeNode.root()
-        val pro1 = TreeNode("Project1")
-        val pro1_1 = TreeNode("Project1-1")
-        val pro1_2 = TreeNode("Project1-2")
+        val pro1 = TreeNode(ProjectItem("Project1",0))
+        val pro1_1 = TreeNode(ProjectItem("Project1-1",1))
+        val pro1_2 = TreeNode(ProjectItem("Project1-2",1))
         pro1.addChild(pro1_1)
         pro1.addChild(pro1_2)
 
-        val pro2 = TreeNode("Project2")
+        val pro2 = TreeNode(ProjectItem("Project2",0))
 
-        val pro3 = TreeNode("Project3")
-        val pro3_1 = TreeNode("Project3-1")
-        val pro3_1_1 = TreeNode("Project3-1-1")
+        val pro3 = TreeNode(ProjectItem("Project3",0))
+        val pro3_1 = TreeNode(ProjectItem("Project3-1",1))
+        val pro3_1_1 = TreeNode(ProjectItem("Project3-1-1",2))
         pro3_1.addChild(pro3_1_1)
         pro3.addChild(pro3_1)
 
