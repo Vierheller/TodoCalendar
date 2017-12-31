@@ -2,7 +2,6 @@ package de.vierheller.todocalendar.view.main
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -16,6 +15,7 @@ import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.view.TaskActivity
 import de.vierheller.todocalendar.view.main.list.ListViewFragment
+import de.vierheller.todocalendar.view.main.projects.ProjectsFragment
 import de.vierheller.todocalendar.viewmodel.TodoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     val listViewFragment: ListViewFragment = ListViewFragment()
     val dayViewFragment: DayViewFragment = DayViewFragment()
+    val projectsFragment: ProjectsFragment = ProjectsFragment()
     lateinit var currentFragment:Fragment
 
 
@@ -71,8 +72,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = getString(R.string.nav_main_calendar)
             }
 
-            is ListViewFragment ->{
+            is ListViewFragment -> {
                 title = getString(R.string.nav_main_list)
+            }
+
+            is ProjectsFragment -> {
+                title = getString(R.string.nav_main_projects)
             }
         }
         currentFragment = fragment
@@ -103,6 +108,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             ListViewFragment::class.java.canonicalName ->{
                 openFragment(listViewFragment)
+            }
+
+            ProjectsFragment::class.java.canonicalName ->{
+                openFragment(projectsFragment)
             }
 
             else->{
@@ -140,7 +149,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 openFragment(listViewFragment)
             }
             R.id.nav_projects -> {
-
+                openFragment(projectsFragment)
             }
         }
 
