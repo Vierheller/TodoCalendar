@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -13,12 +14,14 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
+import de.vierheller.todocalendar.view.main.MainActivity
 import de.vierheller.todocalendar.view.main.list.extra.RecyclerItemTouchHelper
 import de.vierheller.todocalendar.view.main.list.extra.SimpleDividerItemDecoration
-import de.vierheller.todocalendar.view.main.MainActivity
 import de.vierheller.todocalendar.view.main.list.extra.SimpleSectionedRecyclerViewAdapter
 import de.vierheller.todocalendar.viewmodel.ListViewFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
+import org.jetbrains.anko.find
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import java.text.DateFormat
 
 
@@ -51,6 +54,7 @@ class ListViewFragment : Fragment() {
         setHasOptionsMenu(true)
 
         // Inflate the layout for this fragment
+
         return inflater!!.inflate(R.layout.fragment_list, container, false)
     }
 
@@ -99,6 +103,11 @@ class ListViewFragment : Fragment() {
         sectionAdapter = SimpleSectionedRecyclerViewAdapter(activity, R.layout.section, R.id.section_text,adapter)
         sectionAdapter.setSections(sectionList)
         recyclerList.adapter = sectionAdapter
+
+        val fab = view?.find<FloatingActionButton>(R.id.fab)
+        fab?.onClick {
+            mActivity.startTaskActivity(null)
+        }
 
 
         viewModel.getTasks()

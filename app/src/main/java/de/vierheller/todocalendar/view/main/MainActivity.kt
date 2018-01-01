@@ -40,10 +40,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel::class.java)
 
-        fab.setOnClickListener { _ ->
-            startTaskActivity(null)
-        }
-
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)

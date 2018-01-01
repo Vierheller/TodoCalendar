@@ -3,12 +3,15 @@ package de.vierheller.todocalendar.view.main
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
+import org.jetbrains.anko.find
+import org.jetbrains.anko.sdk25.coroutines.onClick
 
 
 /**
@@ -21,26 +24,31 @@ import de.vierheller.todocalendar.model.todo.Task
  */
 class DayViewFragment : Fragment() {
     private var mListener: OnDayViewFragmentInteractionListener? = null
-    private lateinit var mainActivity: MainActivity
+    private lateinit var mActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivity = activity as MainActivity
+        mActivity = activity as MainActivity
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+
         return inflater!!.inflate(R.layout.fragment_day_view, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainActivity.todoViewModel.getTasks()
+        mActivity.todoViewModel.getTasks()
                 .observe(this, Observer<List<Task>> {tasks ->
 
                 })
+        val fab = view?.find<FloatingActionButton>(R.id.fab)
+        fab?.onClick {
+            mActivity.startTaskActivity(null)
+        }
     }
 
     override fun onAttach(context: Context?) {
