@@ -27,6 +27,7 @@ class ProjectsFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_projects, container, false) as FrameLayout
 
         val tView = AndroidTreeView(activity, createTree())
+        tView.setDefaultContainerStyle(R.style.TreeNodeStyleDivided, true)
         tView.setDefaultViewHolder(CustomProjectsViewHolder(activity).javaClass)
         view.addView(tView.view)
 
