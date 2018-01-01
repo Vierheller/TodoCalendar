@@ -69,4 +69,7 @@ dependencies {
 
     /* DateTimePicker */
     compile 'com.github.Kunzisoft:Android-SwitchDateTimePicker:1.8'
+
+    /* TreeView */
+    compile 'com.github.bmelnychuk:atv:1.2.9'
 }
