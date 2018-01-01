@@ -6,6 +6,7 @@ import de.vierheller.todocalendar.dependency_injection.ApplicationComponent
 import de.vierheller.todocalendar.dependency_injection.DaggerApplicationComponent
 import de.vierheller.todocalendar.dependency_injection.TodoModule
 import de.vierheller.todocalendar.model.todo.MyDatabase
+import net.danlew.android.joda.JodaTimeAndroid
 
 /**
  * Created by Vierheller on 01.11.2017.
@@ -22,5 +23,8 @@ class TodoCalendarApplication : Application() {
         graph = DaggerApplicationComponent.builder().todoModule(TodoModule()).build()
         graph.inject(this)
         database =  Room.databaseBuilder(this, MyDatabase::class.java, "todo-calendar-db").build()
+
+        //Inti Joda Time
+        JodaTimeAndroid.init(this);
     }
 }

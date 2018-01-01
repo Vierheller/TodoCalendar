@@ -3,12 +3,15 @@ package de.vierheller.todocalendar.viewmodel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.ViewModel
+import android.text.format.DateUtils
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Priority
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.model.todo.TaskFilter
 import de.vierheller.todocalendar.model.todo.TaskSorting
 import de.vierheller.todocalendar.view.main.list.extra.SimpleSectionedRecyclerViewAdapter
+import de.vierheller.todocalendar.viewmodel.ListViewFragmentViewModel.DateRangesCalculator.Companion.dayIsBefore
+import org.joda.time.DateTimeComparator
 import java.util.*
 
 /**
@@ -237,14 +240,12 @@ class ListViewFragmentViewModel: ViewModel() {
                 false
             }
 
-            //TODO needs to be replaced with compare of days and not exact times
             private infix fun Calendar.dayIsBefore(it: Calendar): Boolean {
-                return this.timeInMillis < it.timeInMillis
+                return DateTimeComparator.getDateOnlyInstance().compare(this, it) < 0
             }
 
-            //TODO needs to be replaced with compare of days and not exact times
             private infix fun Calendar.dayIsAfter(it: Calendar): Boolean {
-                return this.timeInMillis > it.timeInMillis
+                return DateTimeComparator.getDateOnlyInstance().compare(this, it) > 0
             }
 
             private fun Calendar.dayInBetween(before: Calendar, after:Calendar): Boolean {
