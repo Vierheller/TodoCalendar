@@ -3,6 +3,7 @@ package de.vierheller.todocalendar.view.main.projects
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,9 @@ import android.widget.FrameLayout
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
 import de.vierheller.todocalendar.R
-
-
-
-
+import de.vierheller.todocalendar.view.dialogs.MyProjectsDialog
+import kotlinx.android.synthetic.main.fragment_projects.*
+import org.jetbrains.anko.sdk25.coroutines.onClick
 
 
 /**
@@ -29,10 +29,27 @@ class ProjectsFragment : Fragment() {
         val tView = AndroidTreeView(activity, createTree())
         tView.setDefaultContainerStyle(R.style.TreeNodeStyleDivided, true)
         tView.setDefaultViewHolder(CustomProjectsViewHolder(activity).javaClass)
+        tView.collapseAll()
+        tView.setDefaultNodeLongClickListener{ treeNode: TreeNode, value: Any ->
+            if(value is ProjectItem){
+                Log.d("Tag", value.name)
+            }
+            true
+        }
         view.addView(tView.view)
 
 
         return view
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        fab.onClick {
+            val dialog = MyProjectsDialog.getInstance("Hans", "Wurst")
+            dialog.show(activity.supportFragmentManager, "ProjectsDialog")
+            dialog.setListener{ changed: Boolean, name: String, parent: String ->
+                Log.d("TAG", name)
+            }
+        }
     }
 
     private fun createTree(): TreeNode {
