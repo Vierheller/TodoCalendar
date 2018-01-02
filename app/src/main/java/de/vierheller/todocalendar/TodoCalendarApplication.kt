@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room
 import de.vierheller.todocalendar.dependency_injection.ApplicationComponent
 import de.vierheller.todocalendar.dependency_injection.DaggerApplicationComponent
 import de.vierheller.todocalendar.dependency_injection.TodoModule
-import de.vierheller.todocalendar.model.todo.MyDatabase
+import de.vierheller.todocalendar.model.MyDatabase
 import net.danlew.android.joda.JodaTimeAndroid
 
 /**
