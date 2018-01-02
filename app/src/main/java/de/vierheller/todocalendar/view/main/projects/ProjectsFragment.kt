@@ -20,23 +20,22 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
  * A simple [Fragment] subclass.
  */
 class ProjectsFragment : Fragment() {
-
+    private lateinit var treeView : AndroidTreeView
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_projects, container, false) as FrameLayout
 
-        val tView = AndroidTreeView(activity, createTree())
-        tView.setDefaultContainerStyle(R.style.TreeNodeStyleDivided, true)
-        tView.setDefaultViewHolder(CustomProjectsViewHolder(activity).javaClass)
-        tView.collapseAll()
-        tView.setDefaultNodeLongClickListener{ treeNode: TreeNode, value: Any ->
+        treeView = AndroidTreeView(activity, createTree())
+        treeView.setDefaultContainerStyle(R.style.TreeNodeStyleDivided, true)
+        treeView.setDefaultViewHolder(CustomProjectsViewHolder(activity).javaClass)
+        treeView.setDefaultNodeLongClickListener{ treeNode: TreeNode, value: Any ->
             if(value is ProjectItem){
                 Log.d("Tag", value.name)
             }
             true
         }
-        view.addView(tView.view)
+        view.addView(treeView.view)
 
 
         return view
@@ -50,6 +49,8 @@ class ProjectsFragment : Fragment() {
                 Log.d("TAG", name)
             }
         }
+        treeView.expandAll()
+        treeView.setUseAutoToggle(false)
     }
 
     private fun createTree(): TreeNode {

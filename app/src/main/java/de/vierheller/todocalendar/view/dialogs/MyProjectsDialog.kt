@@ -51,7 +51,7 @@ class MyProjectsDialog : DialogFragment() {
         parent = arguments.getString(TAG_PARENT)
     }
 
-    public fun setListener(listener:(changed: Boolean, name: String, parent: String) -> Unit){
+    fun setListener(listener:(changed: Boolean, name: String, parent: String) -> Unit){
         this.listener = listener
     }
 
