@@ -9,5 +9,5 @@ import de.vierheller.todocalendar.model.todo.Task
  */
 interface ProjectDAO {
     @Query("SELECT * FROM projects")
-    fun getAllProjectsLive(): LiveData<List<Project>>
+    fun getAllProjects(): List<Project>
 }
