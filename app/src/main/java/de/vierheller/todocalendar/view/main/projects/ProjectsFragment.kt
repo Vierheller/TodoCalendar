@@ -53,10 +53,11 @@ class ProjectsFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         fab.onClick {
             val dialog = MyProjectsDialog.getInstance("Hans", "Wurst")
-            dialog.show(activity.supportFragmentManager, "ProjectsDialog")
             dialog.setListener{ changed: Boolean, name: String, parent: String ->
                 Log.d("TAG", name)
             }
+//            dialog.show(activity.supportFragmentManager, "ProjectsDialog")
+            viewModel.getTree()
         }
         treeView.expandAll()
         treeView.setUseAutoToggle(false)
