@@ -3,7 +3,7 @@ package de.vierheller.todocalendar.dependency_injection
 import dagger.Component
 import de.vierheller.todocalendar.view.main.MainActivity
 import de.vierheller.todocalendar.TodoCalendarApplication
-import de.vierheller.todocalendar.viewmodel.ProjectsPragmentViewModel
+import de.vierheller.todocalendar.viewmodel.ProjectsFragmentViewModel
 import de.vierheller.todocalendar.viewmodel.TaskActivityViewModel
 import de.vierheller.todocalendar.viewmodel.TodoViewModel
 import javax.inject.Singleton
@@ -22,5 +22,5 @@ interface ApplicationComponent {
 
     fun inject(viewModel: TaskActivityViewModel)
 
-    fun inject(viewMode: ProjectsPragmentViewModel)
+    fun inject(viewMode: ProjectsFragmentViewModel)
 }

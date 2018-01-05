@@ -1,7 +1,7 @@
 package de.vierheller.todocalendar.view.main.projects
 
 
-import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -14,7 +14,7 @@ import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.view.dialogs.MyProjectsDialog
-import de.vierheller.todocalendar.viewmodel.ProjectsPragmentViewModel
+import de.vierheller.todocalendar.viewmodel.ProjectsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_projects.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
@@ -24,18 +24,18 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
  */
 class ProjectsFragment : Fragment() {
     private lateinit var treeView:AndroidTreeView
-    private lateinit var viewModel:ProjectsPragmentViewModel
+    private lateinit var viewModel: ProjectsFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ProjectsPragmentViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(ProjectsFragmentViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_projects, container, false) as FrameLayout
 
-        treeView = AndroidTreeView(activity, viewModel.getViewTree())
+        treeView = AndroidTreeView(activity, TreeNode.root())
         treeView.setDefaultContainerStyle(R.style.TreeNodeStyleDivided, true)
         treeView.setDefaultViewHolder(CustomProjectsViewHolder(activity).javaClass)
         treeView.setDefaultNodeLongClickListener{ treeNode: TreeNode, value: Any ->
@@ -56,9 +56,13 @@ class ProjectsFragment : Fragment() {
             dialog.setListener{ changed: Boolean, name: String, parent: String ->
                 Log.d("TAG", name)
             }
-//            dialog.show(activity.supportFragmentManager, "ProjectsDialog")
-            viewModel.getTree()
+            dialog.show(activity.supportFragmentManager, "ProjectsDialog")
+
         }
+        viewModel.getTree().observe(this, Observer {
+            treeView.setRoot(it)
+        })
+
         treeView.expandAll()
         treeView.setUseAutoToggle(false)
     }

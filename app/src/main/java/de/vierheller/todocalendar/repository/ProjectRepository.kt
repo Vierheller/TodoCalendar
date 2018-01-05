@@ -1,7 +1,9 @@
 package de.vierheller.todocalendar.repository
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.project.Project
 import de.vierheller.todocalendar.model.project.Tree
@@ -10,15 +12,25 @@ import de.vierheller.todocalendar.model.project.Tree
  * Created by Vierheller on 02.01.2018.
  */
 class ProjectRepository {
-    var treeLiveData = MutableLiveData<Tree<Project>>()
-    fun getProjectsTree()  {
-        getProjectsLive().observeForever{
-            val tree = Tree<Project>()
-            tree.getRoot().children
-                    .addAll(createTree(-1, tree.getRoot(), it!!.toMutableList()))
+    private var treeLiveData = MediatorLiveData<Tree<Project>>()
+    private var projectsLiveData: LiveData<List<Project>>? = null
 
-            treeLiveData.value
+    fun getModelProjectTree():LiveData<Tree<Project>>  {
+        if(projectsLiveData == null){
+            projectsLiveData = getProjectsLive()
+
+            treeLiveData.addSource(projectsLiveData!!){ list ->
+                transformList(list!!)
+            }
         }
+        return treeLiveData
+    }
+
+    fun transformList(list:List<Project>): Tree<Project> {
+        val tree = Tree<Project>()
+        tree.getRoot().children
+                .addAll(createTree(-1, tree.getRoot(), list))
+        return tree
     }
 
     fun getProjectsTest(): List<Project>{
@@ -46,7 +58,7 @@ class ProjectRepository {
     /**
      * Creates a tree from the database projects
      */
-    private fun createTree(parent:Long, nodeParent: Tree.Node<Project>, list:MutableList<Project>): List<Tree.Node<Project>> {
+    private fun createTree(parent:Long, nodeParent: Tree.Node<Project>, list:List<Project>): List<Tree.Node<Project>> {
         val newChildren = mutableListOf<Tree.Node<Project>>()
         for(i in 0 until list.size){
             val project = list[i]

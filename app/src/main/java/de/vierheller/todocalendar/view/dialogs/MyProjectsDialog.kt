@@ -59,7 +59,7 @@ class MyProjectsDialog : DialogFragment() {
         private val TAG_NAME = "NAME"
         private val TAG_PARENT = "PROJECT"
 
-        fun getInstance(name:String, parent:String): MyProjectsDialog {
+        fun getInstance(name:String, parent:Int): MyProjectsDialog {
             return MyProjectsDialog().withArguments(TAG_NAME to name, TAG_PARENT to parent)
         }
     }

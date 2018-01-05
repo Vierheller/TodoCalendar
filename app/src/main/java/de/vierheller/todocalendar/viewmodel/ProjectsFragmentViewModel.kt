@@ -1,7 +1,7 @@
 package de.vierheller.todocalendar.viewmodel
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.unnamed.b.atv.model.TreeNode
@@ -15,11 +15,12 @@ import javax.inject.Inject
 /**
  * Created by Vierheller on 02.01.2018.
  */
-class ProjectsPragmentViewModel : ViewModel() {
+class ProjectsFragmentViewModel : ViewModel() {
     @Inject
     lateinit var projectRepo : ProjectRepository
 
-    private var liveTree: MutableLiveData<TreeNode>? = null;
+    private var liveTree: LiveData<Tree<Project>>? = null
+    private var liveViewTree = MediatorLiveData<TreeNode>()
 
     init {
         TodoCalendarApplication.graph.inject(this)
@@ -27,18 +28,20 @@ class ProjectsPragmentViewModel : ViewModel() {
 
     fun getTree():LiveData<TreeNode>{
         if(liveTree==null){
-            liveTree = MutableLiveData()
-            projectRepo.getProjectsTree()
-            {
-                Log.d("TAG", it.toString())
-                val treeRoot = TreeNode.root()
-                treeRoot.addChildren(createTree(it.getRoot(), 0))
-                liveTree!!.value = treeRoot
+            liveTree = projectRepo.getModelProjectTree()
+            liveViewTree.addSource(liveTree!!){ tree ->
+                transformModelTreeToViewTree(tree!!)
             }
         }
 
-        return liveTree!!
+        return liveViewTree
+    }
 
+    fun transformModelTreeToViewTree(tree:Tree<Project>): TreeNode? {
+        Log.d("TAG", tree.toString())
+        val treeRoot = TreeNode.root()
+        treeRoot.addChildren(createTree(tree!!.getRoot(), 0))
+        return treeRoot
     }
 
     /**
