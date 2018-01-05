@@ -2,11 +2,11 @@ package de.vierheller.todocalendar.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
+import android.util.Log
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.project.Project
 import de.vierheller.todocalendar.model.project.Tree
+import org.jetbrains.anko.doAsync
 
 /**
  * Created by Vierheller on 02.01.2018.
@@ -18,15 +18,16 @@ class ProjectRepository {
     fun getModelProjectTree():LiveData<Tree<Project>>  {
         if(projectsLiveData == null){
             projectsLiveData = getProjectsLive()
-
+            Log.d("TAG", "getModelProjectTree()")
             treeLiveData.addSource(projectsLiveData!!){ list ->
-                transformList(list!!)
+                Log.d("TAG", "transformListToModelTree() ${list}")
+                treeLiveData.value = transformListToModelTree(list!!)
             }
         }
         return treeLiveData
     }
 
-    fun transformList(list:List<Project>): Tree<Project> {
+    fun transformListToModelTree(list:List<Project>): Tree<Project> {
         val tree = Tree<Project>()
         tree.getRoot().children
                 .addAll(createTree(-1, tree.getRoot(), list))
@@ -45,6 +46,13 @@ class ProjectRepository {
                 Project(7,"Project4", -1),
                 Project(8,"Project5", -1)
         )
+    }
+
+    fun addProject(project:Project){
+        doAsync {
+            Log.d("TAG", "Add Project")
+            TodoCalendarApplication.database.projectDao().addProject(project)
+        }
     }
 
     fun getProjectsLive(): LiveData<List<Project>> {

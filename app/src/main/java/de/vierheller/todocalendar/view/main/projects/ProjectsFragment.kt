@@ -26,6 +26,8 @@ class ProjectsFragment : Fragment() {
     private lateinit var treeView:AndroidTreeView
     private lateinit var viewModel: ProjectsFragmentViewModel
 
+    private lateinit var treeViewView:View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(ProjectsFragmentViewModel::class.java)
@@ -44,7 +46,8 @@ class ProjectsFragment : Fragment() {
             }
             true
         }
-        view.addView(treeView.view)
+        treeViewView = treeView.view
+        view.addView(treeViewView)
 
 
         return view
@@ -52,15 +55,19 @@ class ProjectsFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         fab.onClick {
-            val dialog = MyProjectsDialog.getInstance("Hans", "Wurst")
-            dialog.setListener{ changed: Boolean, name: String, parent: String ->
-                Log.d("TAG", name)
+            val dialog = MyProjectsDialog.getInstance("Hans", -1)
+            dialog.setListener{ changed: Boolean, name: String, parent: Long ->
+                Log.d("TAG", "${name} ${parent}")
+                viewModel.addProject(name, parent)
             }
             dialog.show(activity.supportFragmentManager, "ProjectsDialog")
 
         }
         viewModel.getTree().observe(this, Observer {
+            Log.d("TAG", "tree ${it}")
             treeView.setRoot(it)
+            (view as FrameLayout).removeView(treeViewView)
+            view.addView(treeView.getView())
         })
 
         treeView.expandAll()

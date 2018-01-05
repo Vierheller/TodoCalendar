@@ -17,10 +17,10 @@ import org.jetbrains.anko.support.v4.withArguments
  * Created by Vierheller on 02.01.2018.
  */
 class MyProjectsDialog : DialogFragment() {
-    private var listener: ((changed: Boolean, name: String, parent: String) -> Unit)? = null
+    private var listener: ((changed: Boolean, name: String, parent: Long) -> Unit)? = null
 
     private lateinit var name:String
-    private lateinit var parent:String
+    private var parent:Long = -1
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
@@ -30,6 +30,8 @@ class MyProjectsDialog : DialogFragment() {
         //Inflating custom datepicker view
         val inflater = activity.layoutInflater;
         val view = inflater.inflate(R.layout.dialog_project, null)
+
+        view.find<EditText>(R.id.project_name).setText(name)
 
         builder.setView(view)
         builder.setTitle(R.string.dialog_fragment_title)
@@ -48,10 +50,10 @@ class MyProjectsDialog : DialogFragment() {
 
     fun parseArgs(){
         name = arguments.getString(TAG_NAME)
-        parent = arguments.getString(TAG_PARENT)
+        parent = arguments.getLong(TAG_PARENT)
     }
 
-    fun setListener(listener:(changed: Boolean, name: String, parent: String) -> Unit){
+    fun setListener(listener:(changed: Boolean, name: String, parent: Long) -> Unit){
         this.listener = listener
     }
 
@@ -59,7 +61,7 @@ class MyProjectsDialog : DialogFragment() {
         private val TAG_NAME = "NAME"
         private val TAG_PARENT = "PROJECT"
 
-        fun getInstance(name:String, parent:Int): MyProjectsDialog {
+        fun getInstance(name:String, parent:Long): MyProjectsDialog {
             return MyProjectsDialog().withArguments(TAG_NAME to name, TAG_PARENT to parent)
         }
     }

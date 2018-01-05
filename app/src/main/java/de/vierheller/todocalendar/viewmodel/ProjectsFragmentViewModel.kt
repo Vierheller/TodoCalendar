@@ -29,8 +29,10 @@ class ProjectsFragmentViewModel : ViewModel() {
     fun getTree():LiveData<TreeNode>{
         if(liveTree==null){
             liveTree = projectRepo.getModelProjectTree()
+            Log.d("TAG", "getTree()" )
             liveViewTree.addSource(liveTree!!){ tree ->
-                transformModelTreeToViewTree(tree!!)
+                Log.d("TAG", "transformModelTreeToViewTree() ${tree}" )
+                liveViewTree.value = transformModelTreeToViewTree(tree!!)
             }
         }
 
@@ -62,5 +64,9 @@ class ProjectsFragmentViewModel : ViewModel() {
         }
 
         return newViewChildren
+    }
+
+    fun addProject(name: String, parent: Long) {
+        projectRepo.addProject(Project(name = name, parent = parent))
     }
 }

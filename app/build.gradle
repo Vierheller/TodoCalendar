@@ -69,6 +69,6 @@ dependencies {
 
     /* TreeView */
     implementation 'com.github.bmelnychuk:atv:1.2.9'
-//    implementation project(':dayview')
+    implementation project(':dayview')
 
 }
