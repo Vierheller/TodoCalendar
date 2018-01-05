@@ -1,28 +1,24 @@
 package de.vierheller.todocalendar.repository
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.project.Project
 import de.vierheller.todocalendar.model.project.Tree
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.util.*
 
 /**
  * Created by Vierheller on 02.01.2018.
  */
 class ProjectRepository {
-    fun getProjectsTree(callback:(tree:Tree<Project>)->Unit)  {
-        doAsync {
-            val list = getProjectsTest()
+    var treeLiveData = MutableLiveData<Tree<Project>>()
+    fun getProjectsTree()  {
+        getProjectsLive().observeForever{
             val tree = Tree<Project>()
             tree.getRoot().children
-                    .addAll(createTree(-1, tree.getRoot(), list.toMutableList()))
+                    .addAll(createTree(-1, tree.getRoot(), it!!.toMutableList()))
 
-            uiThread {
-                callback.invoke(tree)
-            }
+            treeLiveData.value
         }
-
     }
 
     fun getProjectsTest(): List<Project>{
@@ -37,6 +33,10 @@ class ProjectRepository {
                 Project(7,"Project4", -1),
                 Project(8,"Project5", -1)
         )
+    }
+
+    fun getProjectsLive(): LiveData<List<Project>> {
+        return TodoCalendarApplication.database.projectDao().getAllProjectsLive()
     }
 
     fun getProjects(): List<Project> {

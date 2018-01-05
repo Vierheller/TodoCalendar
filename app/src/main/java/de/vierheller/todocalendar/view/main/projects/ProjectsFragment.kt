@@ -35,7 +35,7 @@ class ProjectsFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_projects, container, false) as FrameLayout
 
-        treeView = AndroidTreeView(activity, createTree())
+        treeView = AndroidTreeView(activity, viewModel.getViewTree())
         treeView.setDefaultContainerStyle(R.style.TreeNodeStyleDivided, true)
         treeView.setDefaultViewHolder(CustomProjectsViewHolder(activity).javaClass)
         treeView.setDefaultNodeLongClickListener{ treeNode: TreeNode, value: Any ->
@@ -62,28 +62,4 @@ class ProjectsFragment : Fragment() {
         treeView.expandAll()
         treeView.setUseAutoToggle(false)
     }
-
-    private fun createTree(): TreeNode {
-        val root = TreeNode.root()
-        val pro1 = TreeNode(ProjectItem("Project1",0))
-        val pro1_1 = TreeNode(ProjectItem("Project1-1",1))
-        val pro1_2 = TreeNode(ProjectItem("Project1-2",1))
-        pro1.addChild(pro1_1)
-        pro1.addChild(pro1_2)
-
-        val pro2 = TreeNode(ProjectItem("Project2",0))
-
-        val pro3 = TreeNode(ProjectItem("Project3",0))
-        val pro3_1 = TreeNode(ProjectItem("Project3-1",1))
-        val pro3_1_1 = TreeNode(ProjectItem("Project3-1-1",2))
-        pro3_1.addChild(pro3_1_1)
-        pro3.addChild(pro3_1)
-
-
-        root.addChild(pro1)
-        root.addChild(pro2)
-        root.addChild(pro3)
-        return root
-    }
-
 }
