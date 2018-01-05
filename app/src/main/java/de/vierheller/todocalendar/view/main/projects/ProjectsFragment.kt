@@ -56,9 +56,9 @@ class ProjectsFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         fab.onClick {
             val dialog = MyProjectsDialog.getInstance("Hans", -1)
-            dialog.setListener{ changed: Boolean, name: String, parent: Long ->
-                Log.d("TAG", "${name} ${parent}")
-                viewModel.addProject(name, parent)
+            dialog.setListener{ changed: Boolean, name: String, parentPosition: Int ->
+                Log.d("TAG", "${name} ${parentPosition}")
+                viewModel.addProject(name, parentPosition)
             }
             dialog.show(activity.supportFragmentManager, "ProjectsDialog")
 
@@ -67,7 +67,9 @@ class ProjectsFragment : Fragment() {
             Log.d("TAG", "tree ${it}")
             treeView.setRoot(it)
             (view as FrameLayout).removeView(treeViewView)
-            view.addView(treeView.getView())
+            treeViewView = treeView.getView()
+            view.addView(treeViewView)
+            treeView.expandAll()
         })
 
         treeView.expandAll()

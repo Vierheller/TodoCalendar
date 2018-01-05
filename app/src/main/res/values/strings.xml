@@ -42,4 +42,5 @@
     <string name="dialog_project_label_etProject">Project Name</string>
     <string name="dialog_project_label_parent">Parent Project</string>
     <string name="dialog_fragment_title">Project</string>
+    <string name="root_project">Root</string>
 </resources>

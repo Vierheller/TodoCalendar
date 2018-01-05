@@ -2,6 +2,7 @@ package de.vierheller.todocalendar.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.Observer
 import android.util.Log
 import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.project.Project
@@ -59,8 +60,10 @@ class ProjectRepository {
         return TodoCalendarApplication.database.projectDao().getAllProjectsLive()
     }
 
-    fun getProjects(): List<Project> {
-        return  TodoCalendarApplication.database.projectDao().getAllProjects()
+    fun getProjects(observer: Observer<List<Project>>){
+        doAsync {
+            observer.onChanged(TodoCalendarApplication.database.projectDao().getAllProjects())
+        }
     }
 
     /**

@@ -2,6 +2,8 @@ package de.vierheller.todocalendar.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.unnamed.b.atv.model.TreeNode
@@ -22,6 +24,7 @@ class ProjectsFragmentViewModel : ViewModel() {
     private var liveTree: LiveData<Tree<Project>>? = null
     private var liveViewTree = MediatorLiveData<TreeNode>()
 
+
     init {
         TodoCalendarApplication.graph.inject(this)
     }
@@ -37,6 +40,10 @@ class ProjectsFragmentViewModel : ViewModel() {
         }
 
         return liveViewTree
+    }
+
+    fun getProjects(): LiveData<List<Project>> {
+        return projectRepo.getProjectsLive()
     }
 
     fun transformModelTreeToViewTree(tree:Tree<Project>): TreeNode? {
@@ -66,7 +73,15 @@ class ProjectsFragmentViewModel : ViewModel() {
         return newViewChildren
     }
 
-    fun addProject(name: String, parent: Long) {
-        projectRepo.addProject(Project(name = name, parent = parent))
+    fun addProject(name: String, parent: Int) {
+        if(parent != -1){
+            projectRepo.getProjects(Observer {
+                val parent = it!!.get(parent)
+                Log.d("TAG", "Parent is ${parent}")
+                projectRepo.addProject(Project(name = name, parent = parent.uid))
+            })
+        }else{
+            projectRepo.addProject(Project(name = name, parent = -1))
+        }
     }
 }
