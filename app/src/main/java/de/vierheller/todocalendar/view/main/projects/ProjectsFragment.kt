@@ -55,12 +55,16 @@ class ProjectsFragment : Fragment() {
     }
 
     fun createDialog(name:String, parent:Int){
-        val dialog = MyProjectsDialog.getInstance("Hans", parent)
-        dialog.setListener{ changed: Boolean, name: String, parentPosition: Int ->
-            Log.d("TAG", "${name} ${parentPosition}")
-            viewModel.addProject(name, parentPosition)
+        val dialog = MyProjectsDialog.getInstance(name, parent)
+        dialog.setListener{ changed: Boolean, newName: String, parentPosition: Int ->
+            Log.d("TAG", "${newName} ${parentPosition}")
+            viewModel.addProject(newName, parentPosition)
         }
         dialog.show(activity.supportFragmentManager, "ProjectsDialog")
+    }
+
+    fun createDialog(){
+        createDialog("", -1)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
