@@ -37,7 +37,7 @@ class MyProjectsDialog : DialogFragment(){
 
     private lateinit var viewModel:ProjectsFragmentViewModel
     private lateinit var name:String
-    private var parent:Long = -1
+    private var parent:Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +83,7 @@ class MyProjectsDialog : DialogFragment(){
 
     fun parseArgs(){
         name = arguments.getString(TAG_NAME)
-        parent = arguments.getLong(TAG_PARENT)
+        parent = arguments.getInt(TAG_PARENT)
     }
 
     fun setListener(listener:(changed: Boolean, name: String, parentPosition: Int) -> Unit){
@@ -94,7 +94,7 @@ class MyProjectsDialog : DialogFragment(){
         private val TAG_NAME = "NAME"
         private val TAG_PARENT = "PROJECT"
 
-        fun getInstance(name:String, parent:Long): MyProjectsDialog {
+        fun getInstance(name:String, parent:Int): MyProjectsDialog {
             return MyProjectsDialog().withArguments(TAG_NAME to name, TAG_PARENT to parent)
         }
     }
