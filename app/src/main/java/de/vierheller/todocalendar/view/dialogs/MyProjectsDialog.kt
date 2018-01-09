@@ -3,14 +3,11 @@ package de.vierheller.todocalendar.view.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
@@ -18,26 +15,23 @@ import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.project.Project
 import de.vierheller.todocalendar.viewmodel.ProjectsFragmentViewModel
 import org.jetbrains.anko.find
-import org.jetbrains.anko.sdk25.coroutines.onItemSelectedListener
-import org.jetbrains.anko.support.v4.find
 import org.jetbrains.anko.support.v4.withArguments
-import java.text.ParseException
 
 
 /**
  * Created by Vierheller on 02.01.2018.
  */
 class MyProjectsDialog : DialogFragment(){
-    var selectedItem:Int = -2
-    var didSelect = false
+    private lateinit var viewModel:ProjectsFragmentViewModel
 
     lateinit var adapter:SpinnerAdapter
 
-    private var listener: ((changed: Boolean, name: String, parentPosition: Int) -> Unit)? = null
-
-    private lateinit var viewModel:ProjectsFragmentViewModel
+    //Arguments
+    private var id:Long = 0
     private lateinit var name:String
     private var parent:Int = -1
+
+    private var listener: ((changed: Boolean, id:Long, name: String, parentPosition: Int) -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +56,9 @@ class MyProjectsDialog : DialogFragment(){
             adapter.clear()
             adapter.add(activity?.getString(R.string.root_project)?:"Null")
             adapter.addAll(it!!.map { it.name })
+            if(parent>-1){
+                spinner.setSelection(parent)
+            }
         }
         viewModel.getProjects().observe(activity, observer)
 
@@ -72,7 +69,7 @@ class MyProjectsDialog : DialogFragment(){
             val newParentPos = view.find<Spinner>(R.id.project_parent_chooser).selectedItemPosition - 1
 
             viewModel.getProjects().removeObserver(observer)
-            listener?.invoke(false, newName, newParentPos)
+            listener?.invoke(false, this.id, newName, newParentPos)
         }
         builder.setNegativeButton(R.string.dialog_cancel){ dialogInterface: DialogInterface, i: Int ->
 
@@ -86,16 +83,17 @@ class MyProjectsDialog : DialogFragment(){
         parent = arguments.getInt(TAG_PARENT)
     }
 
-    fun setListener(listener:(changed: Boolean, name: String, parentPosition: Int) -> Unit){
+    fun setListener(listener:(changed: Boolean, id:Long, name: String, parentPosition: Int) -> Unit){
         this.listener = listener
     }
 
     companion object {
+        private val TAG_ID = "ID"
         private val TAG_NAME = "NAME"
         private val TAG_PARENT = "PROJECT"
 
-        fun getInstance(name:String, parent:Int): MyProjectsDialog {
-            return MyProjectsDialog().withArguments(TAG_NAME to name, TAG_PARENT to parent)
+        fun getInstance(projectId:Long, name:String, parent:Int): MyProjectsDialog {
+            return MyProjectsDialog().withArguments(TAG_ID to projectId, TAG_NAME to name, TAG_PARENT to parent)
         }
     }
 

@@ -2,7 +2,6 @@ package de.vierheller.todocalendar.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.util.Log
@@ -65,7 +64,8 @@ class ProjectsFragmentViewModel : ViewModel() {
         val newViewChildren = mutableListOf<TreeNode>()
 
         for (modelNodeChild in modelNode.children){
-            val newViewNode = TreeNode(ProjectItem(modelNodeChild.data?.name?:"Unknown",level))
+            val modelNode = modelNodeChild.data!!
+            val newViewNode = TreeNode(ProjectItem(modelNode.uid, modelNode.name, modelNode.parent, level))
             newViewNode.addChildren(createTree(modelNodeChild, level+1))
             newViewChildren.add(newViewNode)
         }
@@ -73,15 +73,27 @@ class ProjectsFragmentViewModel : ViewModel() {
         return newViewChildren
     }
 
-    fun addProject(name: String, parent: Int) {
+    fun insertOrUpdateProject(id:Long, name: String, parent: Int) {
         if(parent != -1){
             projectRepo.getProjects(Observer {
                 val parent = it!!.get(parent)
                 Log.d("TAG", "Parent is ${parent}")
-                projectRepo.addProject(Project(name = name, parent = parent.uid))
+                projectRepo.addProject(Project(uid = id, name = name, parent = parent.uid))
             })
         }else{
-            projectRepo.addProject(Project(name = name, parent = -1))
+            projectRepo.addProject(Project(uid = id, name = name, parent = -1))
         }
+    }
+
+    fun projectPositionFromParentId(parentId:Long, observer:Observer<Int>){
+        projectRepo.getProjects(Observer { projects->
+            for(i in 0 until projects!!.size){
+                val project = projects[i]
+                if(project.parent == parentId){
+                    observer.onChanged(i)
+                    return@Observer
+                }
+            }
+        })
     }
 }

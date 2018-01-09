@@ -44,8 +44,12 @@ class ProjectsFragment : Fragment() {
         treeView.setDefaultNodeLongClickListener{ treeNode: TreeNode, value: Any ->
             if(value is ProjectItem){
                 Log.d("Tag", value.name)
+                viewModel.projectPositionFromParentId(value.parent_id, Observer { position->
+                    createDialog(value.database_id, value.name, position!!)
+                })
+                true
             }
-            true
+            false
         }
         treeViewView = treeView.view
         view.addView(treeViewView)
@@ -54,17 +58,17 @@ class ProjectsFragment : Fragment() {
         return view
     }
 
-    fun createDialog(name:String, parent:Int){
-        val dialog = MyProjectsDialog.getInstance(name, parent)
-        dialog.setListener{ changed: Boolean, newName: String, parentPosition: Int ->
+    fun createDialog(projectId:Long, name:String, parent:Int){
+        val dialog = MyProjectsDialog.getInstance(projectId, name, parent)
+        dialog.setListener{ changed: Boolean, id:Long, newName: String, parentPosition: Int ->
             Log.d("TAG", "${newName} ${parentPosition}")
-            viewModel.addProject(newName, parentPosition)
+            viewModel.insertOrUpdateProject(id, newName, parentPosition)
         }
         dialog.show(activity.supportFragmentManager, "ProjectsDialog")
     }
 
     fun createDialog(){
-        createDialog("", -1)
+        createDialog(0, "", -1)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
