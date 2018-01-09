@@ -73,15 +73,15 @@ class ProjectsFragmentViewModel : ViewModel() {
         return newViewChildren
     }
 
-    fun insertOrUpdateProject(id:Long, name: String, parent: Int) {
-        if(parent != -1){
+    fun insertOrUpdateProject(id:Long, name: String, parentPosition: Int) {
+        if(parentPosition != -1){
             projectRepo.getProjects(Observer {
-                val parent = it!!.get(parent)
+                val parent = it!!.get(parentPosition)
                 Log.d("TAG", "Parent is ${parent}")
-                projectRepo.addProject(Project(uid = id, name = name, parent = parent.uid))
+                projectRepo.insertProject(Project(uid = id, name = name, parent = parent.uid))
             })
         }else{
-            projectRepo.addProject(Project(uid = id, name = name, parent = -1))
+            projectRepo.insertProject(Project(uid = id, name = name, parent = -1))
         }
     }
 

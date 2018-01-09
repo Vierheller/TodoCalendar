@@ -1,10 +1,7 @@
 package de.vierheller.todocalendar.model.project
 
 import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 
 /**
  * Created by Vierheller on 02.01.2018.
@@ -17,7 +14,7 @@ interface ProjectDao {
     @Query("SELECT * FROM projects")
     fun getAllProjectsLive(): LiveData<List<Project>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addProject(project: Project)
 
     @Delete
