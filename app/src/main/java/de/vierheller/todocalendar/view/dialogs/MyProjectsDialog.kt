@@ -79,6 +79,7 @@ class MyProjectsDialog : DialogFragment(){
     }
 
     fun parseArgs(){
+        id = arguments.getLong(TAG_ID)
         name = arguments.getString(TAG_NAME)
         parent = arguments.getInt(TAG_PARENT)
     }

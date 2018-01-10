@@ -60,8 +60,9 @@ class ProjectsFragment : Fragment() {
 
     fun createDialog(projectId:Long, name:String, parent:Int){
         val dialog = MyProjectsDialog.getInstance(projectId, name, parent)
+        Log.d("TAG", "Opening Praject with id ${projectId}")
         dialog.setListener{ changed: Boolean, id:Long, newName: String, parentPosition: Int ->
-            Log.d("TAG", "${newName} ${parentPosition}")
+            Log.d("TAG", "${newName} ${parentPosition}, ${id}")
             viewModel.insertOrUpdateProject(id, newName, parentPosition)
         }
         dialog.show(activity.supportFragmentManager, "ProjectsDialog")
