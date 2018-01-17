@@ -33,7 +33,7 @@ class MyProjectsDialog : DialogFragment(){
     //Arguments
     private var id:Long = 0
     private lateinit var name:String
-    private var parent:Int = -1
+    private var parentId:Long = -1
 
     private var listener: ((changed: Boolean, id:Long, name: String, parentId: Long) -> Unit)? = null
 
@@ -56,17 +56,16 @@ class MyProjectsDialog : DialogFragment(){
         adapter = SpinnerAdapter(activity, android.R.layout.simple_spinner_item)
         spinner.adapter = adapter
 
-
-        val observer = Observer<List<Project>> {
-
-        }
-
+        //Receive LiveData for current Project
         this.spinnerProjectLiveData = viewModel.getParentsSpinnerList(curId = id)
+
         this.spinnerProjectLiveData.observe(activity, Observer {
             adapter.clear()
             adapter.addAll(it)
-            if(parent>-1){
-                spinner.setSelection(parent)
+            if(parentId >-1){
+                for(spinnerItem in it!!)
+                    if(spinnerItem.project?.uid == parentId)
+                        spinner.setSelection(it.indexOf(spinnerItem))
             }
         })
 
@@ -77,7 +76,6 @@ class MyProjectsDialog : DialogFragment(){
             val newParentPos = view.find<Spinner>(R.id.project_parent_chooser).selectedItemPosition
             val parentId = spinnerProjectLiveData.value!![newParentPos].project?.uid?:-1
 
-            viewModel.getProjects().removeObserver(observer)
             listener?.invoke(false, this.id, newName, parentId)
         }
         builder.setNegativeButton(R.string.dialog_cancel){ dialogInterface: DialogInterface, i: Int ->
@@ -90,7 +88,7 @@ class MyProjectsDialog : DialogFragment(){
     fun parseArgs(){
         id = arguments.getLong(TAG_ID)
         name = arguments.getString(TAG_NAME)
-        parent = arguments.getInt(TAG_PARENT)
+        parentId = arguments.getLong(TAG_PARENT)
     }
 
     fun setListener(listener:(changed: Boolean, id:Long, name: String, parentId: Long) -> Unit){
@@ -100,9 +98,9 @@ class MyProjectsDialog : DialogFragment(){
     companion object {
         private val TAG_ID = "ID"
         private val TAG_NAME = "NAME"
-        private val TAG_PARENT = "PROJECT"
+        private val TAG_PARENT = "PARENT"
 
-        fun getInstance(projectId:Long, name:String, parent:Int): MyProjectsDialog {
+        fun getInstance(projectId:Long, name:String, parent:Long): MyProjectsDialog {
             return MyProjectsDialog().withArguments(TAG_ID to projectId, TAG_NAME to name, TAG_PARENT to parent)
         }
     }

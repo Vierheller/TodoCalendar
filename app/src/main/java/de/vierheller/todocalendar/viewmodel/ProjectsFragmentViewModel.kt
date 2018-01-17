@@ -96,17 +96,31 @@ class ProjectsFragmentViewModel : ViewModel() {
         })
     }
 
+    /**
+     * Creates new LiveData for the provided id.
+     * Reason is that the current project should not be selectable.
+     * If it would be selectable, a object would be parent of itself
+     * and disappear from tree.
+     */
     fun getParentsSpinnerList(curId:Long): LiveData<List<SpinnerItem>> {
+        //Null check -> init projects ifnot already happened
         if(this.projects == null){
             getProjects()
         }
+
         val parentsSpinnerList = MediatorLiveData<List<SpinnerItem>>()
         parentsSpinnerList.addSource(this.projects!!, Observer {
             var list = mutableListOf<SpinnerItem>()
+
+            //TODO translationable name for root node
+            list.add(SpinnerItem("None", null))
+
+            //Filtering -> do not add current project
             it!!.forEach {
                 if(it.uid != curId)
                     list!!.add(SpinnerItem(it.name, it))
             }
+
             parentsSpinnerList.value = list
         })
         return parentsSpinnerList

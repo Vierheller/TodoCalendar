@@ -44,9 +44,7 @@ class ProjectsFragment : Fragment() {
         treeView.setDefaultNodeLongClickListener{ treeNode: TreeNode, value: Any ->
             if(value is ProjectItem){
                 Log.d("Tag", value.name)
-                viewModel.projectPositionFromParentId(value.parent_id, Observer { position->
-                    createDialog(value.database_id, value.name, position!!)
-                })
+                createDialog(value.database_id, value.name, value.parent_id)
                 true
             }
             false
@@ -58,7 +56,7 @@ class ProjectsFragment : Fragment() {
         return view
     }
 
-    fun createDialog(projectId:Long, name:String, parent:Int){
+    fun createDialog(projectId:Long, name:String, parent:Long){
         val dialog = MyProjectsDialog.getInstance(projectId, name, parent)
         Log.d("TAG", "Opening Praject with id ${projectId}")
         dialog.setListener{ changed: Boolean, id:Long, newName: String, parentId: Long ->
