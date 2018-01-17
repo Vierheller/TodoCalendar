@@ -9,13 +9,12 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.project.Project
 import de.vierheller.todocalendar.viewmodel.ProjectsFragmentViewModel
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.dialog_project.view.*
 import org.jetbrains.anko.support.v4.withArguments
 
 
@@ -43,18 +42,33 @@ class MyProjectsDialog : DialogFragment(){
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity)
-
         parseArgs()
 
         //Inflating custom datepicker view
         val inflater = activity.layoutInflater;
         val view = inflater.inflate(R.layout.dialog_project, null)
 
-        view.find<EditText>(R.id.project_name).setText(name)
-        val spinner = view.find<Spinner>(R.id.project_parent_chooser)
+        return AlertDialog.Builder(activity)
+                .setView(setupView(view))
+                .setPositiveButton(R.string.dialog_accept)
+                    { dialogInterface: DialogInterface, i: Int ->
+                        val newName = view.project_name.text.toString()
+                        val newParentPos = view.parent_spinner.selectedItemPosition
+                        val parentId = spinnerProjectLiveData.value!![newParentPos].project?.uid?:-1
+
+                        listener?.invoke(false, this.id, newName, parentId)
+                    }
+                .setNegativeButton(R.string.dialog_cancel)
+                    { dialogInterface: DialogInterface, i: Int ->
+
+                    }
+                .create()
+    }
+
+    private fun setupView(view: View):View {
+        view.project_name.setText(name)
         adapter = SpinnerAdapter(activity, android.R.layout.simple_spinner_item)
-        spinner.adapter = adapter
+        view.parent_spinner.adapter = adapter
 
         //Receive LiveData for current Project
         this.spinnerProjectLiveData = viewModel.getParentsSpinnerList(curId = id)
@@ -65,24 +79,11 @@ class MyProjectsDialog : DialogFragment(){
             if(parentId >-1){
                 for(spinnerItem in it!!)
                     if(spinnerItem.project?.uid == parentId)
-                        spinner.setSelection(it.indexOf(spinnerItem))
+                        view.parent_spinner.setSelection(it.indexOf(spinnerItem))
             }
         })
 
-        builder.setView(view)
-        builder.setTitle(R.string.dialog_fragment_title)
-        builder.setPositiveButton(R.string.dialog_accept){ dialogInterface: DialogInterface, i: Int ->
-            val newName = view.find<EditText>(R.id.project_name).text.toString()
-            val newParentPos = view.find<Spinner>(R.id.project_parent_chooser).selectedItemPosition
-            val parentId = spinnerProjectLiveData.value!![newParentPos].project?.uid?:-1
-
-            listener?.invoke(false, this.id, newName, parentId)
-        }
-        builder.setNegativeButton(R.string.dialog_cancel){ dialogInterface: DialogInterface, i: Int ->
-
-        }
-
-        return builder.create()
+        return view
     }
 
     fun parseArgs(){
