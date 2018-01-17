@@ -2,6 +2,7 @@ package de.vierheller.todocalendar.view.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -26,12 +27,15 @@ class MyProjectsDialog : DialogFragment(){
 
     lateinit var adapter:SpinnerAdapter
 
+    lateinit var spinnerProjectLiveData:LiveData<List<SpinnerItem>>
+
+
     //Arguments
     private var id:Long = 0
     private lateinit var name:String
     private var parent:Int = -1
 
-    private var listener: ((changed: Boolean, id:Long, name: String, parentPosition: Int) -> Unit)? = null
+    private var listener: ((changed: Boolean, id:Long, name: String, parentId: Long) -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,24 +56,29 @@ class MyProjectsDialog : DialogFragment(){
         adapter = SpinnerAdapter(activity, android.R.layout.simple_spinner_item)
         spinner.adapter = adapter
 
+
         val observer = Observer<List<Project>> {
+
+        }
+
+        this.spinnerProjectLiveData = viewModel.getParentsSpinnerList(curId = id)
+        this.spinnerProjectLiveData.observe(activity, Observer {
             adapter.clear()
-            adapter.add(activity?.getString(R.string.root_project)?:"Null")
-            adapter.addAll(it!!.map { it.name })
+            adapter.addAll(it)
             if(parent>-1){
                 spinner.setSelection(parent)
             }
-        }
-        viewModel.getProjects().observe(activity, observer)
+        })
 
         builder.setView(view)
         builder.setTitle(R.string.dialog_fragment_title)
         builder.setPositiveButton(R.string.dialog_accept){ dialogInterface: DialogInterface, i: Int ->
             val newName = view.find<EditText>(R.id.project_name).text.toString()
-            val newParentPos = view.find<Spinner>(R.id.project_parent_chooser).selectedItemPosition - 1
+            val newParentPos = view.find<Spinner>(R.id.project_parent_chooser).selectedItemPosition
+            val parentId = spinnerProjectLiveData.value!![newParentPos].project?.uid?:-1
 
             viewModel.getProjects().removeObserver(observer)
-            listener?.invoke(false, this.id, newName, newParentPos)
+            listener?.invoke(false, this.id, newName, parentId)
         }
         builder.setNegativeButton(R.string.dialog_cancel){ dialogInterface: DialogInterface, i: Int ->
 
@@ -84,7 +93,7 @@ class MyProjectsDialog : DialogFragment(){
         parent = arguments.getInt(TAG_PARENT)
     }
 
-    fun setListener(listener:(changed: Boolean, id:Long, name: String, parentPosition: Int) -> Unit){
+    fun setListener(listener:(changed: Boolean, id:Long, name: String, parentId: Long) -> Unit){
         this.listener = listener
     }
 
@@ -98,5 +107,12 @@ class MyProjectsDialog : DialogFragment(){
         }
     }
 
-    class SpinnerAdapter(ctx: Context, res:Int): ArrayAdapter<String>(ctx, res)
+    class SpinnerAdapter(ctx: Context, res:Int): ArrayAdapter<SpinnerItem>(ctx, res)
+}
+
+
+data class SpinnerItem(val name:String, val project: Project?){
+    override fun toString(): String {
+        return this.name
+    }
 }

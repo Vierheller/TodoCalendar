@@ -10,6 +10,7 @@ import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.project.Project
 import de.vierheller.todocalendar.model.project.Tree
 import de.vierheller.todocalendar.repository.ProjectRepository
+import de.vierheller.todocalendar.view.dialogs.SpinnerItem
 import de.vierheller.todocalendar.view.main.projects.ProjectItem
 import javax.inject.Inject
 
@@ -22,6 +23,9 @@ class ProjectsFragmentViewModel : ViewModel() {
 
     private var liveTree: LiveData<Tree<Project>>? = null
     private var liveViewTree = MediatorLiveData<TreeNode>()
+
+    private var projects: LiveData<List<Project>>? = null
+
 
 
     init {
@@ -42,7 +46,10 @@ class ProjectsFragmentViewModel : ViewModel() {
     }
 
     fun getProjects(): LiveData<List<Project>> {
-        return projectRepo.getProjectsLive()
+        if(this.projects == null){
+            this.projects = projectRepo.getProjectsLive()
+        }
+        return this.projects!!
     }
 
     fun transformModelTreeToViewTree(tree:Tree<Project>): TreeNode? {
@@ -73,16 +80,8 @@ class ProjectsFragmentViewModel : ViewModel() {
         return newViewChildren
     }
 
-    fun insertOrUpdateProject(id:Long, name: String, parentPosition: Int) {
-        if(parentPosition != -1){
-            projectRepo.getProjects(Observer {
-                val parent = it!!.get(parentPosition)
-                Log.d("TAG", "Parent is ${parent}")
-                projectRepo.insertProject(Project(uid = id, name = name, parent = parent.uid))
-            })
-        }else{
-            projectRepo.insertProject(Project(uid = id, name = name, parent = -1))
-        }
+    fun insertOrUpdateProject(id:Long, name: String, parentId: Long) {
+        projectRepo.insertProject(Project(uid = id, name = name, parent = parentId))
     }
 
     fun projectPositionFromParentId(parentId:Long, observer:Observer<Int>){
@@ -95,5 +94,21 @@ class ProjectsFragmentViewModel : ViewModel() {
                 }
             }
         })
+    }
+
+    fun getParentsSpinnerList(curId:Long): LiveData<List<SpinnerItem>> {
+        if(this.projects == null){
+            getProjects()
+        }
+        val parentsSpinnerList = MediatorLiveData<List<SpinnerItem>>()
+        parentsSpinnerList.addSource(this.projects!!, Observer {
+            var list = mutableListOf<SpinnerItem>()
+            it!!.forEach {
+                if(it.uid != curId)
+                    list!!.add(SpinnerItem(it.name, it))
+            }
+            parentsSpinnerList.value = list
+        })
+        return parentsSpinnerList
     }
 }
