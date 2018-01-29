@@ -8,69 +8,45 @@ variables:
   ANDROID_SDK_TOOLS: "24.4.1"
 
 before_script:
-  - export ANDROID_HOME="$HOME/Library/Android/sdk"
-  - bundle install
+  - apt-get --quiet update --yes
+  - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
+  - wget --quiet --output-document=android-sdk.tgz https://dl.google.com/android/android-sdk_r${ANDROID_SDK_TOOLS}-linux.tgz
+  - tar --extract --gzip --file=android-sdk.tgz
+  - echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter android-${ANDROID_COMPILE_SDK}
+  - echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter platform-tools
+  - echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter build-tools-${ANDROID_BUILD_TOOLS}
+  - echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter extra-android-m2repository
+  - echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter extra-google-google_play_services
+  - echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter extra-google-m2repository
+  - export ANDROID_HOME=$PWD/android-sdk-linux
+  - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/
+  - chmod +x ./gradlew
 
 stages:
-- build
-- test
-- quality_assurance
-- deploy
+  - build
+  - test
 
-build_job:
+build:
   stage: build
   script:
-    - ./gradlew clean assembleRelease
+    - ./gradlew assembleDebug
   artifacts:
     paths:
     - app/build/outputs/
 
-unit_tests:
+unitTests:
   stage: test
   script:
     - ./gradlew test
-  artifacts:
-    name: "reports_${CI_PROJECT_NAME}_${CI_BUILD_REF_NAME}"
-    when: on_failure
-    expire_in: 4 days
-    paths:
-      - app/build/reports/tests/
 
-instrumentation_tests:
+functionalTests:
   stage: test
   script:
-    - emulator -avd testAVD -no-audio -no-window &
-    - ./ci/android-wait-for-emulator.sh
-    - adb devices
-    - adb shell settings put global window_animation_scale 0 &
-    - adb shell settings put global transition_animation_scale 0 &
-    - adb shell settings put global animator_duration_scale 0 &
-    - adb shell input keyevent 82 &
-    - ./gradlew connectedAndroidTest
-    - ./ci/stop-emulators.sh
-  artifacts:
-    name: "reports_${CI_PROJECT_NAME}_${CI_BUILD_REF_NAME}"
-    when: on_failure
-    expire_in: 4 days
-    paths:
-      - app/build/reports/androidTests/connected/
-
-static_analysis:
-  stage: quality_assurance
-  script:
-    - ./gradlew lint
-    - ./gradlew checkstyle
-    - ./gradlew pmd
-    - ./gradlew findbugs
-  artifacts:
-    name: "reports_${CI_PROJECT_NAME}_${CI_BUILD_REF_NAME}"
-    when: on_failure
-    expire_in: 4 days
-    paths:
-      - app/build/reports/
-
-deploy_internal:
-  stage: deploy
-  script:
-    - bundle exec fastlane android deploy_lane
-  when: manual
+    - wget --quiet --output-document=android-wait-for-emulator https://raw.githubusercontent.com/travis-ci/travis-cookbooks/0f497eb71291b52a703143c5cd63a217c8766dc9/community-cookbooks/android-sdk/files/default/android-wait-for-emulator
+    - chmod +x android-wait-for-emulator
+    - echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter sys-img-x86-google_apis-${ANDROID_COMPILE_SDK}
+    - echo no | android-sdk-linux/tools/android create avd -n test -t android-${ANDROID_COMPILE_SDK} --abi google_apis/x86
+    - android-sdk-linux/tools/emulator64-x86 -avd test -no-window -no-audio &
+    - ./android-wait-for-emulator
+    - adb shell input keyevent 82
+    - ./gradlew cAT
