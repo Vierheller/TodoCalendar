@@ -8,7 +8,7 @@ apply plugin: 'kotlin-kapt'
 
 //Properties
 ext.anko_version = '0.10.2'
-ext.target_sdk_version = 26
+ext.target_sdk_version = 27
 ext.compile_sdk_version = target_sdk_version
 ext.min_sdk_version = 21
 ext.support_version = '27.0.2'
