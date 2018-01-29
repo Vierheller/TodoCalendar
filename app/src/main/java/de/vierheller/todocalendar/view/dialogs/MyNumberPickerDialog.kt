@@ -26,7 +26,7 @@ class MyNumberPickerDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         parseArguments()
 
-        val view = context.layoutInflater.inflate(R.layout.dialog_numberpicker, null)
+        val view = context!!.layoutInflater.inflate(R.layout.dialog_numberpicker, null)
         numberPicker = view.find<NumberPicker>(R.id.dialog_number_picker)
         numberPicker.minValue = minValue
         numberPicker.maxValue = maxValue
@@ -47,14 +47,14 @@ class MyNumberPickerDialog : DialogFragment() {
     }
 
     fun parseArguments(){
-        val args = arguments
+        val args = arguments!!
         titleResource = args.getInt(ARG_TITLE)
         minValue = args.getInt(ARG_MIN_VALUE)
         maxValue = args.getInt(ARG_MAX_VALUE)
         defaultValue = args.getInt(ARG_DEFAULT_VALUE)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view?.find<NumberPicker>(R.id.dialog_number_picker)!!.value = defaultValue
     }

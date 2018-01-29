@@ -46,9 +46,8 @@ class ListViewFragment : Fragment() {
         mActivity = activity as MainActivity
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        viewModel = ViewModelProviders.of(activity).get(ListViewFragmentViewModel::class.java)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        viewModel = ViewModelProviders.of(this!!.activity!!).get(ListViewFragmentViewModel::class.java)
         viewModel.init(mActivity.todoViewModel)
 
         setHasOptionsMenu(true)
@@ -67,7 +66,7 @@ class ListViewFragment : Fragment() {
         return viewModel.menuItemSelected(item!!.itemId)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
@@ -75,7 +74,7 @@ class ListViewFragment : Fragment() {
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.isAutoMeasureEnabled = false
         recyclerList.layoutManager = layoutManager
-        recyclerList.addItemDecoration(SimpleDividerItemDecoration(activity))
+        recyclerList.addItemDecoration(SimpleDividerItemDecoration(this!!.activity!!))
         recyclerList.setHasFixedSize(false)
         recyclerList.itemAnimator = DefaultItemAnimator()
 
@@ -100,7 +99,7 @@ class ListViewFragment : Fragment() {
 
         SimpleSectionedRecyclerViewAdapter.Section(0, "Prio 1")
         val sectionList = listOf(SimpleSectionedRecyclerViewAdapter.Section(0, "Prio 1"))
-        sectionAdapter = SimpleSectionedRecyclerViewAdapter(activity, R.layout.section, R.id.section_text,adapter)
+        sectionAdapter = SimpleSectionedRecyclerViewAdapter(this!!.activity!!, R.layout.section, R.id.section_text,adapter)
         sectionAdapter.setSections(sectionList)
         recyclerList.adapter = sectionAdapter
 

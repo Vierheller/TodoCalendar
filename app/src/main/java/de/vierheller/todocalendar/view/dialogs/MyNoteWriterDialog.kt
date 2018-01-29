@@ -25,7 +25,7 @@ class MyNoteWriterDialog: DialogFragment(){
         val builder = AlertDialog.Builder(activity)
 
         //Inflating custom datepicker view
-        val inflater = activity.layoutInflater;
+        val inflater = activity!!.layoutInflater;
         val view = inflater.inflate(R.layout.dialog_note, null)
 
         //Adding default values
@@ -53,7 +53,7 @@ class MyNoteWriterDialog: DialogFragment(){
 
 
     fun parseArguments(){
-        val args = arguments
+        val args = arguments!!
 
         title = args.getInt(ARG_TITLE)
         text = args.getString(ARG_TEXT)
