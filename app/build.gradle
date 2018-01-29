@@ -6,19 +6,30 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+//Properties
 ext.anko_version = '0.10.2'
+ext.target_sdk_version = 26
+ext.compile_sdk_version = target_sdk_version
+ext.min_sdk_version = 21
+ext.support_version = '27.0.2'
+ext.arch_version = '1.1.0'
+ext.room_version = '1.0.0'
+
+//version
+ext.version_level = 1
+ext.version_name = "0.0.1"
 
 kapt {
     generateStubs = true
 }
 android {
-    compileSdkVersion 26
+    compileSdkVersion compile_sdk_version
     defaultConfig {
         applicationId "de.vierheller.todocalendar"
-        minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
+        versionCode version_level
+        versionName version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -35,19 +46,19 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:design:$support_version"
+    implementation "com.android.support:support-v4:$support_version"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.android.support:support-v4:26.1.0'
     testImplementation 'junit:junit:4.12'
 
     //Utils
     implementation 'net.danlew:android.joda:2.9.9.1'
 
     /** component arch */
-    implementation 'android.arch.lifecycle:runtime:1.0.3'
-    implementation 'android.arch.lifecycle:extensions:1.0.0'
-    annotationProcessor "android.arch.lifecycle:compiler:1.0.0"
+    implementation "android.arch.lifecycle:runtime:$arch_version"
+    implementation "android.arch.lifecycle:extensions:$arch_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
     /** end of arch */
 
     /* Dagger */
@@ -57,8 +68,8 @@ dependencies {
     /* end Dagger */
 
     /* Room */
-    implementation 'android.arch.persistence.room:runtime:1.0.0'
-    kapt "android.arch.persistence.room:compiler:1.0.0"
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
     /* end Room*/
 
     /* Kotlin Libs */
@@ -69,6 +80,8 @@ dependencies {
 
     /* TreeView */
     implementation 'com.github.bmelnychuk:atv:1.2.9'
+
+    /* My DayView*/
     implementation project(':dayview')
 
 }
