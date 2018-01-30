@@ -28,6 +28,6 @@ unitTests:
     - ./gradlew test
 
 functionalTests:
-  stage: test
+  stage: functest
   script:
     - ./gradlew cAT
