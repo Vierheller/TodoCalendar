@@ -3,6 +3,7 @@ package de.vierheller.todocalendar
 import android.support.test.InstrumentationRegistry
 import android.support.test.filters.SmallTest
 import android.support.test.runner.AndroidJUnit4
+import android.test.ActivityUnitTestCase
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,11 +17,16 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 @SmallTest
-class ExampleInstrumentedTest() {
+class ExampleInstrumentedTest{
     @Test
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
         assertEquals("de.vierheller.todocalendar", appContext.packageName)
+    }
+
+    @Test
+    fun test1(){
+        assertEquals(1, 1)
     }
 }
