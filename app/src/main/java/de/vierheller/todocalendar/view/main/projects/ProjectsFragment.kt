@@ -35,11 +35,11 @@ class ProjectsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_projects, container, false) as FrameLayout
+        val view = inflater.inflate(R.layout.fragment_projects, container, false) as FrameLayout
 
         treeView = AndroidTreeView(activity, TreeNode.root())
         treeView.setDefaultContainerStyle(R.style.TreeNodeStyleDivided, true)
-        treeView.setDefaultViewHolder(CustomProjectsViewHolder(this!!.activity!!).javaClass)
+        treeView.setDefaultViewHolder(CustomProjectsViewHolder(this.activity!!).javaClass)
         treeView.setDefaultNodeLongClickListener{ treeNode: TreeNode, value: Any ->
             if(value is ProjectItem){
                 Log.d("Tag", value.name)

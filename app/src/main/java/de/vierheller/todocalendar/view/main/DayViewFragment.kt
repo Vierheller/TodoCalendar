@@ -34,7 +34,7 @@ class DayViewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
-        return inflater!!.inflate(R.layout.fragment_day_view, container, false)
+        return inflater.inflate(R.layout.fragment_day_view, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,8 +44,8 @@ class DayViewFragment : Fragment() {
                 .observe(this, Observer<List<Task>> {tasks ->
 
                 })
-        val fab = view?.find<FloatingActionButton>(R.id.fab)
-        fab?.onClick {
+        val fab = view.find<FloatingActionButton>(R.id.fab)
+        fab.onClick {
             mActivity.startTaskActivity(null)
         }
     }

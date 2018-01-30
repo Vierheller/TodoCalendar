@@ -36,7 +36,7 @@ class MyNumberPickerDialog : DialogFragment() {
         builder.setTitle(titleResource)
         builder.setView(view)
         builder.setPositiveButton(R.string.dialog_accept){ dialogInterface: DialogInterface, i: Int ->
-            val newNumber = numberPicker!!.value
+            val newNumber = numberPicker.value
             listener?.invoke(newNumber)
         }
         builder.setNegativeButton(R.string.dialog_cancel){ dialogInterface: DialogInterface, i: Int ->
@@ -56,7 +56,7 @@ class MyNumberPickerDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view?.find<NumberPicker>(R.id.dialog_number_picker)!!.value = defaultValue
+        view.find<NumberPicker>(R.id.dialog_number_picker).value = defaultValue
     }
 
     fun setValue(value:Int){

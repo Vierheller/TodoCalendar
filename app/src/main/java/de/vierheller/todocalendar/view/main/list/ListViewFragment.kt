@@ -47,14 +47,14 @@ class ListViewFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewModel = ViewModelProviders.of(this!!.activity!!).get(ListViewFragmentViewModel::class.java)
+        viewModel = ViewModelProviders.of(this.activity!!).get(ListViewFragmentViewModel::class.java)
         viewModel.init(mActivity.todoViewModel)
 
         setHasOptionsMenu(true)
 
         // Inflate the layout for this fragment
 
-        return inflater!!.inflate(R.layout.fragment_list, container, false)
+        return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -74,7 +74,7 @@ class ListViewFragment : Fragment() {
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.isAutoMeasureEnabled = false
         recyclerList.layoutManager = layoutManager
-        recyclerList.addItemDecoration(SimpleDividerItemDecoration(this!!.activity!!))
+        recyclerList.addItemDecoration(SimpleDividerItemDecoration(this.activity!!))
         recyclerList.setHasFixedSize(false)
         recyclerList.itemAnimator = DefaultItemAnimator()
 
@@ -99,12 +99,12 @@ class ListViewFragment : Fragment() {
 
         SimpleSectionedRecyclerViewAdapter.Section(0, "Prio 1")
         val sectionList = listOf(SimpleSectionedRecyclerViewAdapter.Section(0, "Prio 1"))
-        sectionAdapter = SimpleSectionedRecyclerViewAdapter(this!!.activity!!, R.layout.section, R.id.section_text,adapter)
+        sectionAdapter = SimpleSectionedRecyclerViewAdapter(this.activity!!, R.layout.section, R.id.section_text,adapter)
         sectionAdapter.setSections(sectionList)
         recyclerList.adapter = sectionAdapter
 
-        val fab = view?.find<FloatingActionButton>(R.id.fab)
-        fab?.onClick {
+        val fab = view.find<FloatingActionButton>(R.id.fab)
+        fab.onClick {
             mActivity.startTaskActivity(null)
         }
 

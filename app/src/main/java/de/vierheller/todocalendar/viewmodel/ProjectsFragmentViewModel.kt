@@ -49,7 +49,7 @@ class ProjectsFragmentViewModel : ViewModel() {
     fun transformModelTreeToViewTree(tree:Tree<Project>): TreeNode? {
         Log.d("TAG", tree.toString())
         val treeRoot = TreeNode.root()
-        treeRoot.addChildren(createTree(tree!!.getRoot(), 0))
+        treeRoot.addChildren(createTree(tree.getRoot(), 0))
         return treeRoot
     }
 
@@ -76,9 +76,9 @@ class ProjectsFragmentViewModel : ViewModel() {
     fun addProject(name: String, parent: Int) {
         if(parent != -1){
             projectRepo.getProjects(Observer {
-                val parent = it!!.get(parent)
-                Log.d("TAG", "Parent is ${parent}")
-                projectRepo.addProject(Project(name = name, parent = parent.uid))
+                val parentProject = it!!.get(parent)
+                Log.d("TAG", "Parent is ${parentProject}")
+                projectRepo.addProject(Project(name = name, parent = parentProject.uid))
             })
         }else{
             projectRepo.addProject(Project(name = name, parent = -1))

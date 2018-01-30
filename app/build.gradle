@@ -115,3 +115,8 @@ dependencies {
     implementation project(':dayview')
 
 }
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
