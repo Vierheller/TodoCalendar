@@ -110,19 +110,28 @@ class ProjectsFragmentViewModel : ViewModel() {
 
         val parentsSpinnerList = MediatorLiveData<List<SpinnerItem>>()
         parentsSpinnerList.addSource(this.projects!!, Observer {
-            var list = mutableListOf<SpinnerItem>()
+            val list = mutableListOf<SpinnerItem>()
 
             //TODO translationable name for root node
             list.add(SpinnerItem("None", null))
 
             //Filtering -> do not add current project
             it!!.forEach {
-                if(it.uid != curId)
-                    list!!.add(SpinnerItem(it.name, it))
+                if(shouldAddToParentList(it))
+                    list.add(SpinnerItem(it.name, it))
             }
 
             parentsSpinnerList.value = list
         })
         return parentsSpinnerList
+    }
+
+    private fun shouldAddToParentList(project:Project, curId:Long):Boolean{
+        when{
+            project.uid == curId ->{
+                return false
+            }
+            project.isParentOf(curId)
+        }
     }
 }
