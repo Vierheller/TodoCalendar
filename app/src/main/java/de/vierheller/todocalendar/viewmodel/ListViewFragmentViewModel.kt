@@ -2,6 +2,7 @@ package de.vierheller.todocalendar.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.text.format.DateUtils
 import de.vierheller.todocalendar.R
@@ -19,6 +20,7 @@ import java.util.*
  */
 class ListViewFragmentViewModel: ViewModel() {
     lateinit var todoViewModel:TodoViewModel
+    private var rawTasks: LiveData<List<Task>>? = null
     private var tasks: MediatorLiveData<List<Task>>? = null
     private var currentFilter: TaskFilter? = null
     private var currentSorting: TaskSorting? = null
@@ -42,7 +44,8 @@ class ListViewFragmentViewModel: ViewModel() {
 
     private fun addTodoSource(){
         //Filtering the LiveData
-        tasks!!.addSource(todoViewModel.getTasks()){ sourceTasks ->
+        rawTasks = todoViewModel.getTasks()
+        tasks!!.addSource(rawTasks!!){ sourceTasks ->
             var list = filterList(sourceTasks!!)
             list = sortList(list)
             tasks!!.value = list
@@ -254,6 +257,9 @@ class ListViewFragmentViewModel: ViewModel() {
         }
     }
 
+    fun existsTodo(): Boolean {
+        return !rawTasks!!.value!!.isEmpty()
+    }
 
 
 }

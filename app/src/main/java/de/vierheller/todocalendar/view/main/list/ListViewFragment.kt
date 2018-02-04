@@ -128,7 +128,7 @@ class ListViewFragment : Fragment() {
         if(adapter.items?.size == 0){
             val helpView = layoutInflater.inflate(R.layout.centered_textview, no_item_holder)
 
-            if(mActivity.isFirstAppUse()){
+            if(!viewModel.existsTodo()){
                 helpView.find<TextView>(R.id.text).setText(R.string.fragment_list_help_text)
             }else{
                 helpView.find<TextView>(R.id.text).setText(R.string.fragment_list_grats_text)
