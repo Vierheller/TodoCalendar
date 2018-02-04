@@ -43,4 +43,6 @@
     <string name="dialog_project_label_parent">Parent Project</string>
     <string name="dialog_fragment_title">Project</string>
     <string name="root_project">Root</string>
+    <string name="fragment_list_help_text">Click the icon below to start with your first Task</string>
+    <string name="fragment_list_grats_text">Congrats, no more Tasks for today. Lean back!</string>
 </resources>
