@@ -2,6 +2,7 @@ package de.vierheller.todocalendar.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.util.Log
@@ -55,7 +56,7 @@ class ProjectsFragmentViewModel : ViewModel() {
     fun transformModelTreeToViewTree(tree:Tree<Project>): TreeNode? {
         Log.d("TAG", tree.toString())
         val treeRoot = TreeNode.root()
-        treeRoot.addChildren(createTree(tree!!.getRoot(), 0))
+        treeRoot.addChildren(createTree(tree.getRoot(), 0))
         return treeRoot
     }
 

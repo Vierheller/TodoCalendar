@@ -45,7 +45,7 @@ class MyProjectsDialog : DialogFragment(){
         parseArgs()
 
         //Inflating custom datepicker view
-        val inflater = activity.layoutInflater;
+        val inflater = activity!!.layoutInflater;
         val view = inflater.inflate(R.layout.dialog_project, null)
 
         return AlertDialog.Builder(activity)
@@ -67,13 +67,13 @@ class MyProjectsDialog : DialogFragment(){
 
     private fun setupView(view: View):View {
         view.project_name.setText(name)
-        adapter = SpinnerAdapter(activity, android.R.layout.simple_spinner_item)
+        adapter = SpinnerAdapter(activity!!, android.R.layout.simple_spinner_item)
         view.parent_spinner.adapter = adapter
 
         //Receive LiveData for current Project
         this.spinnerProjectLiveData = viewModel.getParentsSpinnerList(curId = id)
 
-        this.spinnerProjectLiveData.observe(activity, Observer {
+        this.spinnerProjectLiveData.observe(activity!!, Observer {
             adapter.clear()
             adapter.addAll(it)
             if(parentId >-1){
@@ -87,9 +87,9 @@ class MyProjectsDialog : DialogFragment(){
     }
 
     fun parseArgs(){
-        id = arguments.getLong(TAG_ID)
-        name = arguments.getString(TAG_NAME)
-        parentId = arguments.getLong(TAG_PARENT)
+        id = arguments!!.getLong(TAG_ID)
+        name = arguments!!.getString(TAG_NAME)
+        parentId = arguments!!.getLong(TAG_PARENT)
     }
 
     fun setListener(listener:(changed: Boolean, id:Long, name: String, parentId: Long) -> Unit){

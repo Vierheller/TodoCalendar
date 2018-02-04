@@ -15,7 +15,7 @@ class MyDatePickerDialog : DialogFragment() {
         val builder = AlertDialog.Builder(activity)
 
         //Inflating custom datepicker view
-        val inflater = activity.layoutInflater;
+        val inflater = activity!!.layoutInflater;
         val view = inflater.inflate(R.layout.dialog_datepicker, null)
 
         //Adding view to dialog

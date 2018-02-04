@@ -39,7 +39,7 @@ class TaskActivityViewModel : ViewModel(){
             }
         } else {
             //Initialize with default values
-            val newTask = Task(taskName = "Is this freedom?", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, priority = Priority.MEDIUM.level)
+            val newTask = Task(taskName = "", startDate = Calendar.getInstance().timeInMillis, durationMin = 30, priority = Priority.MEDIUM.level)
             this.task.setValue(newTask)
         }
     }

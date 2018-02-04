@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
+import android.widget.TextView
 import de.vierheller.todocalendar.R
 import de.vierheller.todocalendar.model.todo.Task
 import de.vierheller.todocalendar.view.main.MainActivity
@@ -39,23 +40,22 @@ class ListViewFragment : Fragment() {
     lateinit var adapter: RecyclerTaskListAdapter
     private lateinit var sectionAdapter: SimpleSectionedRecyclerViewAdapter
 
-    lateinit var viewModel:ListViewFragmentViewModel
+    private lateinit var viewModel:ListViewFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mActivity = activity as MainActivity
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        viewModel = ViewModelProviders.of(activity).get(ListViewFragmentViewModel::class.java)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        viewModel = ViewModelProviders.of(this.activity!!).get(ListViewFragmentViewModel::class.java)
         viewModel.init(mActivity.todoViewModel)
 
         setHasOptionsMenu(true)
 
         // Inflate the layout for this fragment
 
-        return inflater!!.inflate(R.layout.fragment_list, container, false)
+        return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -67,7 +67,7 @@ class ListViewFragment : Fragment() {
         return viewModel.menuItemSelected(item!!.itemId)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
@@ -75,7 +75,7 @@ class ListViewFragment : Fragment() {
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.isAutoMeasureEnabled = false
         recyclerList.layoutManager = layoutManager
-        recyclerList.addItemDecoration(SimpleDividerItemDecoration(activity))
+        recyclerList.addItemDecoration(SimpleDividerItemDecoration(this.activity!!))
         recyclerList.setHasFixedSize(false)
         recyclerList.itemAnimator = DefaultItemAnimator()
 
@@ -100,12 +100,12 @@ class ListViewFragment : Fragment() {
 
         SimpleSectionedRecyclerViewAdapter.Section(0, "Prio 1")
         val sectionList = listOf(SimpleSectionedRecyclerViewAdapter.Section(0, "Prio 1"))
-        sectionAdapter = SimpleSectionedRecyclerViewAdapter(activity, R.layout.section, R.id.section_text,adapter)
+        sectionAdapter = SimpleSectionedRecyclerViewAdapter(this.activity!!, R.layout.section, R.id.section_text,adapter)
         sectionAdapter.setSections(sectionList)
         recyclerList.adapter = sectionAdapter
 
-        val fab = view?.find<FloatingActionButton>(R.id.fab)
-        fab?.onClick {
+        val fab = view.find<FloatingActionButton>(R.id.fab)
+        fab.onClick {
             mActivity.startTaskActivity(null)
         }
 
@@ -116,8 +116,24 @@ class ListViewFragment : Fragment() {
                     val sections = viewModel.getSectionsForCurrentSorting()
                     sectionAdapter.setSections(sections)
                     adapter.notifyDataSetChanged()
+                    handleNoItemsView()
             })
 
+    }
+
+    private fun handleNoItemsView(){
+        // In any case, remove the current view. An other may be added later.
+        no_item_holder.removeAllViews()
+
+        if(adapter.items?.size == 0){
+            val helpView = layoutInflater.inflate(R.layout.centered_textview, no_item_holder)
+
+            if(!viewModel.existsTodo()){
+                helpView.find<TextView>(R.id.text).setText(R.string.fragment_list_help_text)
+            }else{
+                helpView.find<TextView>(R.id.text).setText(R.string.fragment_list_grats_text)
+            }
+        }
     }
 
 
