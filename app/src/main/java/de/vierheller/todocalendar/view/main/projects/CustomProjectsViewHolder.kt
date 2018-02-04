@@ -37,4 +37,4 @@ class CustomProjectsViewHolder(context:Context) : TreeNode.BaseNodeViewHolder<Pr
     }
 }
 
-data class ProjectItem(val name: String, val level:Int)
+data class ProjectItem(val database_id:Long, val name: String, val parent_id:Long, val level:Int)

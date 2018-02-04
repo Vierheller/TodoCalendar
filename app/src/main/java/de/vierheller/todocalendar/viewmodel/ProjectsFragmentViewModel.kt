@@ -11,6 +11,7 @@ import de.vierheller.todocalendar.TodoCalendarApplication
 import de.vierheller.todocalendar.model.project.Project
 import de.vierheller.todocalendar.model.project.Tree
 import de.vierheller.todocalendar.repository.ProjectRepository
+import de.vierheller.todocalendar.view.dialogs.SpinnerItem
 import de.vierheller.todocalendar.view.main.projects.ProjectItem
 import javax.inject.Inject
 
@@ -23,6 +24,9 @@ class ProjectsFragmentViewModel : ViewModel() {
 
     private var liveTree: LiveData<Tree<Project>>? = null
     private var liveViewTree = MediatorLiveData<TreeNode>()
+
+    private var projects: LiveData<List<Project>>? = null
+
 
 
     init {
@@ -43,7 +47,10 @@ class ProjectsFragmentViewModel : ViewModel() {
     }
 
     fun getProjects(): LiveData<List<Project>> {
-        return projectRepo.getProjectsLive()
+        if(this.projects == null){
+            this.projects = projectRepo.getProjectsLive()
+        }
+        return this.projects!!
     }
 
     fun transformModelTreeToViewTree(tree:Tree<Project>): TreeNode? {
@@ -65,7 +72,8 @@ class ProjectsFragmentViewModel : ViewModel() {
         val newViewChildren = mutableListOf<TreeNode>()
 
         for (modelNodeChild in modelNode.children){
-            val newViewNode = TreeNode(ProjectItem(modelNodeChild.data?.name?:"Unknown",level))
+            val modelNode = modelNodeChild.data!!
+            val newViewNode = TreeNode(ProjectItem(modelNode.uid, modelNode.name, modelNode.parent, level))
             newViewNode.addChildren(createTree(modelNodeChild, level+1))
             newViewChildren.add(newViewNode)
         }
@@ -73,15 +81,49 @@ class ProjectsFragmentViewModel : ViewModel() {
         return newViewChildren
     }
 
-    fun addProject(name: String, parent: Int) {
-        if(parent != -1){
-            projectRepo.getProjects(Observer {
-                val parentProject = it!!.get(parent)
-                Log.d("TAG", "Parent is ${parentProject}")
-                projectRepo.addProject(Project(name = name, parent = parentProject.uid))
-            })
-        }else{
-            projectRepo.addProject(Project(name = name, parent = -1))
+    fun insertOrUpdateProject(id:Long, name: String, parentId: Long) {
+        projectRepo.insertProject(Project(uid = id, name = name, parent = parentId))
+    }
+
+    fun projectPositionFromParentId(parentId:Long, observer:Observer<Int>){
+        projectRepo.getProjects(Observer { projects->
+            for(i in 0 until projects!!.size){
+                val project = projects[i]
+                if(project.parent == parentId){
+                    observer.onChanged(i)
+                    return@Observer
+                }
+            }
+        })
+    }
+
+    /**
+     * Creates new LiveData for the provided id.
+     * Reason is that the current project should not be selectable.
+     * If it would be selectable, a object would be parent of itself
+     * and disappear from tree.
+     */
+    fun getParentsSpinnerList(curId:Long): LiveData<List<SpinnerItem>> {
+        //Null check -> init projects ifnot already happened
+        if(this.projects == null){
+            getProjects()
         }
+
+        val parentsSpinnerList = MediatorLiveData<List<SpinnerItem>>()
+        parentsSpinnerList.addSource(this.projects!!, Observer {
+            var list = mutableListOf<SpinnerItem>()
+
+            //TODO translationable name for root node
+            list.add(SpinnerItem("None", null))
+
+            //Filtering -> do not add current project
+            it!!.forEach {
+                if(it.uid != curId)
+                    list!!.add(SpinnerItem(it.name, it))
+            }
+
+            parentsSpinnerList.value = list
+        })
+        return parentsSpinnerList
     }
 }

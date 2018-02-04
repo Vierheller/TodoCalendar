@@ -49,7 +49,7 @@ class ProjectRepository {
         )
     }
 
-    fun addProject(project:Project){
+    fun insertProject(project:Project){
         doAsync {
             Log.d("TAG", "Add Project")
             TodoCalendarApplication.database.projectDao().addProject(project)
