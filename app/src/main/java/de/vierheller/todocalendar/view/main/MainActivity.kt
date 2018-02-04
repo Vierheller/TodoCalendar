@@ -1,6 +1,8 @@
 package de.vierheller.todocalendar.view.main
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -22,12 +24,16 @@ import kotlinx.android.synthetic.main.app_bar_main2.*
 import org.jetbrains.anko.intentFor
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DayViewFragment.OnDayViewFragmentInteractionListener, ListViewFragment.OnFragmentInteractionListener {
+
+
     lateinit var todoViewModel : TodoViewModel
 
     val listViewFragment: ListViewFragment = ListViewFragment()
     val dayViewFragment: DayViewFragment = DayViewFragment()
     val projectsFragment: ProjectsFragment = ProjectsFragment()
     lateinit var currentFragment:Fragment
+
+    lateinit var sharedPreferences: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +53,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
+        sharedPreferences = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+
         onRestoreInstanceState(savedInstanceState)
     }
+
+
 
     fun startTaskActivity(taskId:Long?){
         if(taskId != null)
@@ -153,11 +164,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    public fun isFirstAppUse():Boolean{
+        return sharedPreferences.getBoolean(FIRST_USE, true)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        sharedPreferences.edit().putBoolean(FIRST_USE, false).apply()
+    }
+
     override fun onTaskClicked(task: Task) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     companion object {
         val STATE_FRAGMENT = "FRAGMENT_STATE"
+        val FIRST_USE = "first_use"
     }
 }
